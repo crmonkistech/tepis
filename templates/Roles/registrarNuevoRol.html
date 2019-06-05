@@ -1,0 +1,76 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Roles</li>
+   <li class="active">Registrar rol</li>
+</ol>
+<div class="row">
+   <div class="col-sm-6">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de registro</div>
+         </div>
+         <div class="panel-body">
+            <div class="form-group">
+               <label class="control-label">Nombre</label>
+               <input type="text" class="form-control" ng-model="nuevoRol.Nombre_Rol">
+            </div>
+            <div class="form-group">
+               <label class="text-success" ng-if="statusProceso === 0"></label>
+               <label class="text-danger" ng-if="statusProceso === '-1'">
+                  Error. El nombre del rol ya se encuentra registrado en el sistema.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 100">
+                  Error. Por favor complete los campos del formulario.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 300">
+                  Error. Debe seleccionar al menos un permiso para el rol.
+               </label>
+               <label class="text-success" ng-if="statusProceso === '200'">Rol registrado correctamente</label>
+            </div>
+         </div>
+         <div class="panel-footer" style="background: #FFF;border:#FFF;">
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button class="btn btn-primary" ng-click="agregarRol();">Guardar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-6">
+      <div class="panel">
+         <div class="panel-heading" style="padding-bottom:0;">
+            <div class="panel-title">Permisos disponibles</div>
+            <p>Seleccione los permisos que desa asignar al rol</p>
+         </div>
+         <div class="panel-body">
+            <div class="form-group" style="margin-left:5%;">
+                <div ng-repeat="permi in listaPermisos" ng-if="$index % 3 == 0" class="row">
+                   <div class="col-xs-4">
+                      <label class="radio">
+                          <input id="{{listaPermisos[$index].Nombre_Permiso}}" type="checkbox"> {{listaPermisos[$index].Nombre_Permiso}}
+                      </label>
+                   </div>
+                   <div class="col-xs-4" ng-if="listaPermisos.length > ($index + 1)">
+                      <label class="radio">
+                          <input id="{{listaPermisos[$index + 1].Nombre_Permiso}}" type="checkbox"> {{listaPermisos[$index + 1].Nombre_Permiso}}
+                      </label>
+                   </div>
+                   <div class="col-xs-4" ng-if="listaPermisos.length > ($index + 2)">
+                      <label class="radio">
+                          <input id="{{listaPermisos[$index + 2].Nombre_Permiso}}" type="checkbox"> {{listaPermisos[$index + 2].Nombre_Permiso}}
+                      </label>
+                   </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!--<div ng-repeat="permi in listaPermisos" ng-if="$index % 3 == 0" class="row">
+    <div class="col-xs-4">{{permi.Nombre_Permiso}}</div>
+    <div class="col-xs-4" ng-if="listaPermisos.length > ($index + 1)">{{permi.Nombre_Permiso}}</div>
+    <div class="col-xs-4" ng-if="listaPermisos.length > ($index + 2)">{{permi.Nombre_Permiso}}</div>
+</div>-->

@@ -1,0 +1,132 @@
+<div class="wrapper">
+	<header class="topnavbar-wrapper">
+		<nav class="navbar topnavbar">
+			<div class="navbar-header">
+				<div class="navbar-brand" style="padding-top:7%;color:#FFF;font-size:40px;">
+					SFA
+				</div>
+			</div>
+			<div class="nav-wrapper">
+				<ul class="nav navbar-nav navbar-right">
+		      <li><a href="#" ng-click="cerrarSesion();" style="color:#FFF;font-size:14px;">Cerrar sesión</a></li>
+		    </ul>
+			</div>
+		</nav>
+	</header>
+	<aside class="aside">
+		<div class="aside-inner">
+			<nav class="sidebar">
+				<ul class="nav">
+					<li class="nav-heading">
+						<span>Menú de navegación</span>
+					</li>
+					<li class="menu-item-list"><a ui-sref="dashboard.principal" ><em class="icon-home"></em><span>Inicio</span></a></li>
+					<li><a ui-sref="dashboard.vistaClientes" class="menu-item-list"><em class="icon-people"></em><span>Clientes</span></a></li>
+					<li><a ui-sref="dashboard.vistaJornadas" class="menu-item-list"><em class="icon-layers"></em><span>Jornadas</span></a></li>
+					<li class=" ">
+						<a data-target="#navProductos" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-tag"></em>
+							<span>Productos</span>
+						</a>
+						<ul id="navProductos" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaProductos"><span>Lista de productos</span></a></li>
+							<li><a ui-sref="dashboard.vistaListaPrecios"><span>Listas de precios</span></a></li>
+							<li><a ui-sref="dashboard.vistaImpuestos"><span>Impuestos</span></a></li>
+							<li><a ui-sref="dashboard.vistaDescuentos"><span>Descuentos</span></a></li>
+							<li><a ui-sref="dashboard.vistaBonificaciones"><span>Bonificaciones</span></a></li>
+						</ul>
+					</li>
+					<li>
+						<a data-target="#navDocumentos" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-docs"></em>
+							<span>Documentos</span>
+						</a>
+						<ul id="navDocumentos" class="nav sidebar-subnav collapse">
+							<li ng-click="State_Documentos();"><a><span>Listado y búsqueda</span></a></li>
+							<li><a ui-sref="dashboard.vistaMotivosDevolucion"><span>Motivos de devolución</span></a></li>
+							<li><a ui-sref="dashboard.vistaMotivosDeNoVenta"><span>Motivos de no venta</span></a></li>
+							<li><a ui-sref="dashboard.mapaDocumentos"><span>Mapa de documentos</span></a></li>
+							<li><a ui-sref="dashboard.procesoPedidos"><span>Proceso de pedidos</span></a></li>
+							<li><a ui-sref="dashboard.detalleNoVenta"><span>Detalle no venta</span></a></li>
+							<li><a ui-sref="dashboard.graficaRutas"><span>Gráfica de documentos</span></a></li>
+						</ul>
+					</li>
+					<li>
+						<a data-target="#navEncuestas" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-book-open"></em>
+							<span>Encuestas</span>
+						</a>
+						<ul id="navEncuestas" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaEncuestas"><span>Plantilla</span></a></li>
+							<li><a ui-sref="dashboard.vistaRespuestas"><span>Respuestas</span></a></li>
+						</ul>
+					</li>
+					<li><a ui-sref="dashboard.vistaRutas" class="menu-item-list"><em class="icon-location-pin"></em><span>Rutas</span></a></li>
+					<li><a ui-sref="dashboard.vistaEntregas" class="menu-item-list"><em class="icon-social-dropbox"></em><span>Entregas</span></a></li>
+					<li>
+						<a data-target="#navInventario" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-calculator"></em>
+							<span>Inventario</span>
+						</a>
+						<ul id="navInventario" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaBodegas">Bodegas</span></a></li>
+						</ul>
+					</li>
+					<li>
+						<a data-target="#navFinanciero" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-wallet"></em>
+							<span>Financiero</span>
+						</a>
+						<ul id="navFinanciero" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaBancos"><span>Bancos</span></a></li>
+              <li><a ui-sref="dashboard.vistaCuentas"><span>Cuentas</span></a></li>
+              <!--<li><a ui-sref="dashboard.vistaEquivalencias"><span>Equivalencias</span></a></li>-->
+						</ul>
+					</li>
+					<li>
+						<a data-target="#navSeguridad" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-ban"></em>
+							<span>Seguridad</span>
+						</a>
+						<ul id="navSeguridad" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaUsuarios"><span>Usuarios</span></a></li>
+							<li><a ui-sref="dashboard.vistaRoles"><span>Roles</span></a></li>
+						</ul>
+					</li>
+					<li><a ui-sref="dashboard.periodos" class="menu-item-list"><em class="icon-menu"></em><span>Periodos</span></a></li>
+					<li>
+						<a data-target="#navParametros" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-grid"></em>
+							<span>Configuración</span>
+						</a>
+						<ul id="navParametros" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaParametros">Parámetros</span></a></li>
+							<li><a ui-sref="dashboard.vistaGastosRuta">Categorías gastos en ruta</span></a></li>
+        			<li><a ui-sref="dashboard.vistaCategoriasProductos"><span>Categorías productos</span></a></li>
+        			<li><a ui-sref="dashboard.vistaCategoriasClientes"><span>Categorías clientes</span></a></li>
+						</ul>
+					</li>
+					<li class="menu-item-list"><a ui-sref="dashboard.monitoreo" ><em class="icon-info"></em><span>Monitoreos</span></a></li>
+					<li>
+						<a data-target="#navLogs" data-toggle="collapse" class="menu-item-list">
+							<em class="icon-options"></em>
+							<span>Logs</span>
+						</a>
+						<ul id="navLogs" class="nav sidebar-subnav collapse">
+							<li><a ui-sref="dashboard.vistaLogs"><span>Interfaces SAP</span></a></li>
+							<li><a ui-sref="dashboard.vistaLogsProcesos"><span>Procedimientos</span></a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+	<section>
+		<div class="content-wrapper" style="background-color:#FAFBFC;">
+			<div class="content-heading">
+			   Tablero
+			</div>
+			<div ui-view></div>
+		</div>
+	</section>
+</div>

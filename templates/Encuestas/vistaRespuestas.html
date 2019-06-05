@@ -1,0 +1,81 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Encuestas</li>
+    <li class="active">Respuestas</li>
+</ol>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-1">
+                        <select class="form-control" ng-model="vistaPor" ng-change="setItemsPerPage(vistaPor);" style="margin-top:25px;">
+                            <option>3</option>
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <p style="margin-top:25px;">items por página</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group" style="margin-top:25px;">
+                            <input type="text" class="form-control" placeholder="Nombre o código del cliente" ng-model="objetoRespuesta.Filtro_Cliente"><!--ng-keypress="obtenerRespuestas($event)">-->
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="obtenerRespuestas();">
+                                    <span class="icon-magnifier"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                         <label>Fecha de inicio</label>
+                         <input type="date" class="form-control" ng-model="objetoRespuesta.Fecha_Inicio">
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                         <label>Fecha de finalización</label>
+                         <input type="date" class="form-control" ng-model="objetoRespuesta.Fecha_Finalizacion">
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+              <label ng-if="statusProceso === 0" style="margin-bottom:15px;"></label>
+              <label ng-if="statusProceso === 200" class="text-danger" style="margin-bottom:15px;">Error. Indique el nombre o código del cliente, además de la fecha de inicio y finalización</label>
+              <label ng-if="statusProceso === 300" class="text-danger" style="margin-bottom:15px;">No se encontraron resultados con los datos seleccionados</label>
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>ID Encuesta</th>
+                        <th>Nombre encuesta</th>
+                        <th>Descripción</th>
+                        <th>Encuesta obligatoria</th>
+                        <th>Pregunta</th>
+                        <th>Categoría</th>
+                        <th>Pregunta obligatoria</th>
+                        <th>Respuesta</th>
+                    </tr>
+                    <tr ng-repeat="enc in listaRespuestas.slice(((paginaActual-1)*itemsPorPagina),((paginaActual)*itemsPorPagina)) | filter: filtroRespuesta">
+                        <td>{{enc.ID_Encuesta}}</td>
+                        <td>{{enc.Nombre_Encuesta}}</td>
+                        <td>{{enc.Descripcion}}</td>
+                        <td ng-if="enc.Encuesta_Obligatoria === true">Sí</td>
+                        <td ng-if="enc.Encuesta_Obligatoria === false">No</td>
+                        <td>{{enc.Pregunta}}</td>
+                        <td>{{enc.Nombre_Categoria_Preguntas}}</td>
+                        <td ng-if="enc.Obligatoria === true">Sí</td>
+                        <td ng-if="enc.Obligatoria === false">No</td>
+                        <td ng-if="enc.Nombre_Categoria_Preguntas === 'Fecha'">{{enc.Respuesta | date:'medium'}}</td><!--{{enc.Respuesta | date:'medium'}}-->
+                        <td ng-if="enc.Nombre_Categoria_Preguntas !== 'Fecha'">{{enc.Respuesta}}</td>
+                    </tr>
+                </table>
+                <pagination total-items="totalItems" ng-model="paginaActual" ng-change="pageChanged();" class="pagination-sm" items-per-page="itemsPorPagina"></pagination>
+            </div>
+        </div>
+    </div>
+</div>

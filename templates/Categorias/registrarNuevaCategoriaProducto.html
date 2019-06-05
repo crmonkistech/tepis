@@ -1,0 +1,88 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Categorías productos</li>
+   <li class="active">Registrar categoría</li>
+</ol>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title">Formulario de registro</div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3">
+             <div class="form-group">
+                <label>Nombre de la categoría</label>
+                <input type="text" class="form-control" ng-model="nuevaCategoria.Nombre_Categoria_Producto">
+             </div>
+             <div class="fomr-group">
+               <button class="btn btn-info pull-right" ng-click="agregarCategoria();">Crear categoría</button>
+             </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <div class="col-md-12">
+            <div class="form-group">
+               <label class="text-success" ng-if="statusProceso === 0"></label>
+               <label class="text-danger" ng-if="statusProceso === '-1'">Error. El nombre de la categoría ya se encuentra registrado en el sistema.</label>
+               <label class="text-danger" ng-if="statusProceso === 100">Error. Por favor complete los campos del formulario.</label>
+               <label class="text-danger" ng-if="statusProceso === 300">Error. Debe seleccionar al menos un producto para conformar la categoría.</label>
+               <label class="text-success" ng-if="statusProceso === '200'">Categoría registrada correctamente</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title">Productos disponibles</div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:20px;">
+              <input type="text" placeholder="Ingrese el nombre o código del producto" class="form-control" ng-model="objetoCategoria.Filtro_Producto" ng-keypress="obtenerProductosEnter($event)">
+              <span class="input-group-btn">
+                  <button class="btn btn-default" type="button" ng-click="obtenerProductosFiltro();">
+                      <span class="icon-magnifier"></span>
+                  </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped table-hover">
+               <tr>
+                 <th>ID</th>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                  <th>Seleccionar</th>
+               </tr>
+               <tr ng-repeat="categoria in listaProductos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                  <td>{{categoria.ID_Producto}}</td>
+                  <td>{{categoria.Codigo_Producto}}</td>
+                  <td>{{categoria.Nombre_Producto}}</td>
+                  <td><input type="checkbox" ng-model="Lista_Productos_Seleccionados[categoria.ID_Producto]"></td>
+               </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual + 1}}/{{Calcular_Paginacion()}}
+            <button ng-disabled="Pagina_Actual >= listaProductos.length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

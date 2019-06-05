@@ -1,0 +1,132 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Documentos</li>
+    <li class="active">Detalle no venta</li>
+</ol>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="panel">
+            <div class="panel-body">
+                <aside class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="col-md-3">
+
+                            <div class="row" style="padding-bottom: 5px">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class='input-group date' id='dpFechaInicio'>
+                                            <input id='txt_FI' type='text' class="form-control"
+                                                placeholder="Fecha inicial" ng-model="FechaInicio" />
+                                            <span class="input-group-addon">
+                                                <span class="icon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class='input-group date' id='dpFechaFinal'>
+                                            <input id='txt_FF' type='text' class="form-control"
+                                                placeholder="Fecha final" ng-model="FechaFinal" />
+                                            <span class="input-group-addon">
+                                                <span class="icon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-bottom: 5px">
+                                <div class="col-sm-12">
+
+                                    <strong>Lista rutas:</strong>
+                                    <a href="" style="padding-left: 5px;" ng-click="MarcarTodasLasRutas()">
+                                        Marcar todas</a>
+
+                                    <input type="text" class="form-control" placeholder="Buscar rutas"
+                                        ng-model='Txt_Rutas' ng-change='FiltrarRutas()'>
+
+                                    <br>
+
+                                    <section ng-if="!CargandoTareas">
+
+                                        <ul id="lst_rutas" style="height:380px; overflow: auto;">
+                                            <li ng-repeat="ruta in ListaRutas">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" value="{{ruta.ID_Ruta_Usuario}}"
+                                                            ng-model="ListaRutasSeleccionadas"
+                                                            ng-click="SeleccionarRutasCHK(ruta.ID_Ruta_Usuario);"
+                                                            ng-checked="ListaRutasSeleccionadas | contains:ruta.ID_Ruta_Usuario" />
+                                                        {{ruta.Nombre_Usuario}}</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </section>
+
+                                    <div ng-if="CargandoTareas" class="alert" role="alert">
+                                        <div class="spinner">
+                                            <div class="double-bounce1"></div>
+                                            <div class="double-bounce2"></div>
+                                        </div>
+                                        <span class="lbl_cargando_log">Cargando...</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="row">
+                                <button type="button" class="btn btn-info" ng-click="ProcesoExcel()">Descargar Excel</button>
+                                <div ng-if="!CargandoDetallesNoVenta" style="height:520px; overflow: auto; margin-top: 10px;" class="table-responsive">
+                                    <table id="tblReporte" class="table table-hover table-condensed">
+                                        <thead>
+                                            <th>Fecha</th>
+                                            <th>Usuario</th>
+                                            <th>Nombre cliente</th>
+                                            <th>Nombre fantasia</th>
+                                            <th>Detalle</th>
+                                            <th>Observaciones</th>
+                                            <th>Mapa</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="detalle in ListaDetalleNoVenta">
+                                                <td>{{detalle.Fecha_Creacion}}</td>
+                                                <td>{{detalle.Nombre_Usuario}}</td>
+                                                <td>{{detalle.Nombre_Cliente}}</td>
+                                                <td>{{detalle.Nombre_Fantasia}}</td>
+                                                <td>{{detalle.Descripcion}}</td>
+                                                <td>{{detalle.Observaciones}}</td>
+                                                <td>
+                                                    <a ng-if="detalle.URLActiva == true" href="{{detalle.URL}}"
+                                                        target="_blank">Mapa</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div ng-if="CargandoDetallesNoVenta" class="alert" role="alert">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                    <span class="lbl_cargando_log">Cargando...</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+    </div>
+
+</div>

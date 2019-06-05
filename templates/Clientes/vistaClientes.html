@@ -1,0 +1,55 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li class="active">Clientes</li>
+</ol>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar cliente" ng-model="objetoCliente.Filtro_Cliente" ng-keypress="buscarClientesEnter($event)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="obtenerClientes();">
+                                    <span class="icon-magnifier"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Razón social</th>
+                        <th>Forma de pago</th>
+                        <th>Lista de precios</th>
+                    </tr>
+                    <tr ng-repeat="cliente in listaClientes | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{cliente.ID_Cliente}}</td>
+                        <td>{{cliente.Codigo_Cliente}}</td>
+                        <td>{{cliente.Cedula}}</td>
+                        <td>{{cliente.Nombre_Cliente}}</td>
+                        <td>{{cliente.Nombre_Fantasia}}</td>
+                        <td>{{cliente.Nombre_Forma_Pago}}</td>
+                        <td>{{cliente.Nombre_Lista_Precios}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <div style="float:right;">
+                  <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+                  {{Pagina_Actual + 1}}/{{CalcularPaginacion()}}
+                  <button ng-disabled="Pagina_Actual >= FiltrarEntidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

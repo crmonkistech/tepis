@@ -1,0 +1,733 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Jornadas</li>
+   <li class="active">Procesar jornada</li>
+   <div class="clearfix">
+      <div class="pull-right">
+         <button class="btn btn-info" ng-click="actualizarDatosJornada();" ng-disabled="jornadaFinalizada">Actualizar datos</button>
+      </div>
+      <div class="pull-right">
+         <button class="btn btn-info" ng-click="generarPDF();"  style="margin-right:10px;">Exportar</button><!--ng-disabled="!jornadaFinalizada"-->
+      </div>
+   </div>
+</ol>
+<div class="row">
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Montos finales</strong></div>
+         </div>
+         <div class="panel-body">
+            <table class="table">
+              <tr>
+                <th>Item</th>
+                <th>Monto total</th>
+              </tr>
+              <tr>
+                <td>Facturas</td>
+                <td>{{calcularMontoFacturas() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Devoluciones</td>
+                <td>{{calcularMontoDevoluciones() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Canjes</td>
+                <td>{{calcularMontoCanjes() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Recibos de dinero (Efectivo)</td>
+                <td>{{calcularMontoRecibosEfectivo() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Recibos de dinero (Transferencia)</td>
+                <td>{{calcularMontoRecibosTransferencia() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Recibos de dinero (Cheque)</td>
+                <td>{{calcularMontoRecibosCheque() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Recibos de dinero (Múltiple)</td>
+                <td>{{calcularMontoRecibosMultiple() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Montos finales</strong></div>
+         </div>
+         <div class="panel-body">
+            <table class="table">
+              <tr>
+                <th>Item</th>
+                <th>Monto total</th>
+              </tr>
+              <tr>
+                <td>Depósitos</td>
+                <td>{{calcularMontoDepositos() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr>
+                <td>Gastos en ruta</td>
+                <td>{{calcularMontoGastos() | currency:listaDocumentos[0].Simbolo:2}}</td>
+              </tr>
+              <tr ng-if="!jornadaFinalizada">
+                <td>Monto para ajustes</td>
+                <td><input type="number" ng-model="objetoJornada.Monto_Ajustes" class="form-control"></td>
+              </tr>
+              <tr ng-if="jornadaFinalizada">
+                <td>Monto para ajustes</td>
+                <td><input type="number" ng-model="detalleJornada.Monto_Ajustes" class="form-control" disabled></td>
+              </tr>
+              <tr ng-if="!jornadaFinalizada">
+                <td>Observaciones</td>
+                <td><textarea ng-model="objetoJornada.Observaciones" class="form-control"></textarea></td>
+              </tr>
+              <tr ng-if="jornadaFinalizada">
+                <td>Observaciones</td>
+                <td><textarea ng-model="detalleJornada.Observaciones" class="form-control" disabled></textarea></td>
+              </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Procesar jornada</strong></div>
+         </div>
+         <div class="panel-body">
+            <div class="col-sm-3">
+               <div class="form-group">
+                  <label class="control-label">Nombre:</label>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">Usuario:</label>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">Jornada:</label>
+               </div>
+            </div>
+            <div class="col-sm-9">
+               <div class="form-group">
+                  <label class="control-label">{{infoJornada.Nombre}} {{infoJornada.Apellidos}}</label>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">{{infoJornada.Nombre_Usuario}}</label>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">{{infoJornada.Fecha_Inicio | date:'medium'}} ({{infoJornada.Dias_Jornada}} días en jornada)</label>
+               </div>
+            </div>
+            <div class="row" style="padding-left:15px;">
+              <div class="col-sm-12">
+                <div class="form-group">
+                   <label class="text-success" ng-if="statusProceso === 0"></label>
+                   <label class="text-danger" ng-if="statusProceso === '300'">
+                      Error. Esta jornada ya ha sido finalizada.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === '302'">
+                      Error. La jornada no puede ser finalizada debido a que existen recibos de dinero sin depositar.
+                   </label>
+                   <label class="text-success" ng-if="statusProceso === '200'">Jornada finalizada correctamente</label>
+                </div>
+              </div>
+            </div>
+         </div>
+         <div class="panel-footer" style="background: #FFF;border:#FFF;">
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button class="btn btn-danger" ng-click="cerrarJornada();" ng-disabled="jornadaFinalizada">Finalizar jornada</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Documentos</strong></div>
+            <div class="row">
+              <div class="pull-right">
+                <div class="col-sm-12">
+                    <label>Seleccione el tipo de documento</label>
+                    <select class="form-control" ng-change="filtrarDocumentosTipo()" ng-model="filtroDocumentos.tipoSeleccionado">
+                      <option selected>Todos</option>
+                      <option>Facturas</option>
+                      <option>Devoluciones</option>
+                      <option>Canjes</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:20px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorDocumentos" ng-change="setItemsPerPage(vistaPorDocumentos,'Documentos');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-2">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar documento" class="form-control" ng-model="filtroDocumento" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha inicial</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Inicial_Documentos">
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha final</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Final_Documentos">
+               </div>
+               <div class="col-sm-2">
+                 <button class="btn btn-info" ng-click="filtrarDocumentosFecha();" style="margin-top:25px;">Consultar</button>
+               </div>
+            </div>
+            <div class="row" ng-if="cantidadDocumentosFiltrados === 0" style="margin-top:20px;">
+              <div class="col-sm-12">
+                <label>No se encontraron documentos entre el rango de fechas seleccionado</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Código</th>
+                  <th>Fecha creación</th>
+                  <th>Cliente</th>
+                  <th>Tipo</th>
+				          <th>Número de referencia</th>
+                  <th>Factura Electrónica</th>
+                  <th>Monto total</th>
+               </tr>
+               <tr ng-repeat="doc in filterData = (listaDocumentos | filter: {Codigo_Documento: filtroDocumento})
+               | filter: filters | limitTo:itemsPorPaginaDocumentos:itemsPorPaginaDocumentos*(pageDocumentos-1) | orderBy:'Codigo_Documento'"
+               ng-if="listaDocumentosFiltroFecha.length === 0">
+                  <td>{{doc.Codigo_Documento}}</td>
+                  <td>{{doc.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{doc.Nombre_Cliente}}</td>
+                  <td>{{doc.Nombre_Categoria_Documento}}</td>
+				          <th>{{doc.Codigo_Interfazado}}</th>
+                  <th>{{doc.Consecutivo_Factura_Electronica}}</th>
+                  <td>{{doc.Monto_Total | currency:doc.Simbolo:4}}</td>
+               </tr>
+               <tr ng-repeat="doc in filterData = (listaDocumentosFiltroFecha | filter: {Codigo_Documento: filtroDocumento})
+               | filter: filters | limitTo:itemsPorPaginaDocumentos:itemsPorPaginaDocumentos*(pageDocumentos-1) | orderBy:'Codigo_Documento'"
+               ng-if="listaDocumentosFiltroFecha.length > 0">
+                  <td>{{doc.Codigo_Documento}}</td>
+                  <td>{{doc.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{doc.Nombre_Cliente}}</td>
+                  <td>{{doc.Nombre_Categoria_Documento}}</td>
+				          <th>{{doc.Codigo_Interfazado}}</th>
+                  <th>{{doc.Consecutivo_Factura_Electronica}}</th>
+                  <td>{{doc.Monto_Total | currency:doc.Simbolo:4}}</td>
+               </tr>
+            </table>
+            <!--<pagination class="pagination-sm pagination" total-items="totalItemsDocumentos" ng-model="pageDocumentos"
+			       ng-change="pageChanged()" items-per-page="itemsPorPaginaDocumentos" max-size="maximoItemsPagina"></pagination>-->
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Bonificaciones</strong></div>
+            <div class="row" style="margin-top:25px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorBonificaciones" ng-change="setItemsPerPage(vistaPorBonificaciones,'Bonificaciones');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                     <option>200</option>
+                     <option>500</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Documento</th>
+				  <th>Número referencia</th>
+                  <th>Producto solicitado</th>
+                  <th>Producto bonificado</th>
+                  <th>Bonificación</th>
+                  <th>Cant. Bonificada</th>
+                  <th>Cant. Entregada</th>
+                  <th>Descuento</th>
+               </tr>
+               <tr ng-repeat="bon in listaBonificaciones | limitTo:itemsPorPaginaBonificaciones:itemsPorPaginaBonificaciones*(pageBonificaciones-1)">
+                  <td>{{bon.Codigo_Documento}}</td>
+				  <td>{{bon.Numero_Referencia}}</td>
+                  <td>{{bon.Producto_Solicitado}}</td>
+                  <td>{{bon.Producto_Bonificado}}</td>
+                  <td>{{bon.Nombre_Bonificacion}}</td>
+                  <td>{{bon.Cantidad_Bonificada}}</td>
+                  <td>{{bon.Cantidad_Entregada}}</td>
+                  <td>{{bon.Porcentaje_Descuento | number: 2}}%</td>
+               </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-9">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Recibos de dinero</strong></div>
+            <div class="row" style="margin-top:25px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorRecibos" ng-change="setItemsPerPage(vistaPorRecibos,'Recibos');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-2">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar recibo" class="form-control" ng-model="filtroRecibos" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha inicial</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Inicial_Recibos">
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha final</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Final_Recibos">
+               </div>
+               <div class="col-sm-2">
+                 <button class="btn btn-info" ng-click="filtrarRecibosFecha();" style="margin-top:25px;">Consultar</button>
+               </div>
+            </div>
+            <div class="row" ng-if="cantidadRecibosFiltrados === 0" style="margin-top:20px;">
+              <div class="col-sm-12">
+                <label>No se encontraron recibos de dinero entre el rango de fechas seleccionado</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Código</th>
+                  <th>Fecha recibido</th>
+                  <th>Tipo</th>
+				      <th>Número de referencia</th>
+                  <th>Monto total</th>
+                  <th>Opciones</th>
+               </tr>
+               <tr ng-repeat="rec in filterDataR = (listaRecibos | filter: {Codigo_Recibo: filtroRecibos})
+               | limitTo:itemsPorPaginaRecibos:itemsPorPaginaRecibos*(pageRecibos-1) | orderBy:'Nombre_Categoria_Recibo_Dinero'" ng-if="listaRecibosFiltroFecha.length === 0">
+                  <td>{{rec.Codigo_Recibo}}</td>
+                  <td>{{rec.Fecha_Recibido | date: 'medium'}}</td>
+                  <td>{{rec.Nombre_Categoria_Recibo_Dinero}}</td>
+				      <th>{{rec.Codigo_Interfazado}}</th>
+                  <td>{{rec.Monto_Total | currency:rec.Simbolo:4}}</td>
+                  <td>
+                     <button class="btn btn-success" ng-click="verDetallesReciboDinero(rec.ID_Recibo_Dinero)">Detalles</button>
+                  </td>
+               </tr>
+               <tr ng-repeat="rec in filterDataR = (listaRecibosFiltroFecha | filter: {Codigo_Recibo: filtroRecibos})
+               | limitTo:itemsPorPaginaRecibos:itemsPorPaginaRecibos*(pageRecibos-1) | orderBy:'Nombre_Categoria_Recibo_Dinero'" ng-if="listaRecibosFiltroFecha.length > 0">
+                  <td>{{rec.Codigo_Recibo}}</td>
+                  <td>{{rec.Fecha_Recibido | date: 'medium'}}</td>
+                  <td>{{rec.Nombre_Categoria_Recibo_Dinero}}</td>
+				      <th>{{rec.Codigo_Interfazado}}</th>
+                  <td>{{rec.Monto_Total | currency:rec.Simbolo:4}}</td>
+                  <td>
+                     <button class="btn btn-info" ng-click="verDetallesReciboDinero(rec.ID_Recibo_Dinero)">Detalles</button>
+                  </td>
+               </tr>
+            </table>
+            <!--<pagination class="pagination-sm pagination" total-items="totalItemsRecibos" ng-model="pageRecibos"
+            ng-change="pageChanged();" items-per-page="itemsPorPaginaRecibos" max-size="maximoItemsPagina"></pagination>-->
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="panel" style="overflow:auto;height:241px;">
+         <div class="panel-heading">
+            <div class="panel-title">Facturas canceladas</div>
+         </div>
+         <div class="panel-body">
+            <p>Código(s) de las facturas canceladas con el recibo de dinero seleccionado:</p>
+            <div ng-repeat="doc in listaDocumentosReciboDinero" class="row"><!--ng-if="$index % 3 == 0" -->
+               <div class="col-sm-12">
+                  <p>{{doc.Codigo_Documento}} ({{doc.Monto_Total | currency : '₡' : 2}}) ({{doc.Saldo | currency : '₡' : 2}})</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-9">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Depósitos</strong></div>
+            <div class="row" style="margin-top:20px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorDepositos" ng-change="setItemsPerPage(vistaPorDepositos,'Depositos');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-2">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar depósito" class="form-control" ng-model="filtroDepositos" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha inicial</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Inicial_Depositos">
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha final</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Final_Depositos">
+               </div>
+               <div class="col-sm-2">
+                 <button class="btn btn-info" ng-click="filtrarDepositosFecha();" style="margin-top:25px;">Consultar</button>
+               </div>
+            </div>
+            <div class="row" ng-if="cantidadDepositosFiltrados === 0" style="margin-top:20px;">
+              <div class="col-sm-12">
+                <label>No se encontraron depósitos entre el rango de fechas seleccionado</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Código</th>
+                  <th>Referencia</th>
+                  <th>Fecha de realización</th>
+                  <th>Banco</th>
+                  <th>Cuenta</th>
+				  <th>Número de referencia</th>
+                  <th>Monto total</th>
+                  <th>Opciones</th>
+               </tr>
+               <tr ng-repeat="dep in filterDataD = (listaDepositos | filter: {Codigo: filtroDepositos})
+               | limitTo:itemsPorPaginaDepositos:itemsPorPaginaDepositos*(pageDepositos-1) | orderBy:'Codigo'" ng-if="listaDepositosFiltroFecha.length === 0">
+                  <td>{{dep.Codigo}}</td>
+                  <td>{{dep.Numero_Referencia}}</td>
+                  <td>{{dep.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{dep.Nombre_Banco}}</td>
+                  <td>{{dep.Numero_Cuenta}}</td>
+				  <th>{{dep.Codigo_Interfazado}}</th>
+                  <td>{{dep.Monto_Total | currency:"‎₡":2}}</td>
+                  <td>
+                     <button class="btn btn-success" ng-click="verDetallesDeposito(dep.ID_Deposito)">Detalles</button>
+                  </td>
+               </tr>
+               <tr ng-repeat="dep in filterDataD = (listaDepositosFiltroFecha | filter: {Codigo: filtroDepositos})
+               | limitTo:itemsPorPaginaDepositos:itemsPorPaginaDepositos*(pageDepositos-1) | orderBy:'Codigo'" ng-if="listaDepositosFiltroFecha.length > 0">
+                  <td>{{dep.Codigo}}</td>
+                  <td>{{dep.Numero_Referencia}}</td>
+                  <td>{{dep.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{dep.Nombre_Banco}}</td>
+                  <td>{{dep.Numero_Cuenta}}</td>
+				  <th>{{dep.Codigo_Interfazado}}</th>
+                  <td>{{dep.Monto_Total | currency:"‎₡":2}}</td>
+                  <td>
+                     <button class="btn btn-info" ng-click="verDetallesDeposito(dep.ID_Deposito)">Detalles</button>
+                  </td>
+               </tr>
+            </table>
+            <!--<pagination class="pagination-sm" total-items="totalItemsDepositos" ng-model="pageDepositos"
+            ng-change="pageChanged();" items-per-page="itemsPorPaginaDepositos" max-size="maximoItemsPagina"></pagination>-->
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Recibos de dinero asociados</div>
+         </div>
+         <div class="panel-body">
+            <p>Código(s) de los recibos de dinero cancelados con el depósito seleccionado:</p>
+            <div ng-repeat="doc in listaRecibosDineroDeposito" class="row">
+               <div class="col-sm-12">
+                  <p>{{doc.Codigo_Recibo}} ({{doc.Nombre_Categoria_Recibo_Dinero}}) ({{doc.Monto | currency : '₡' : 2}})</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- stock transfer -->
+<!-- <div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Stock transfer</strong></div>
+            <div class="row" style="margin-top:20px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorStockTransfer" ng-change="setItemsPerPage(vistaPorStockTransfer,'StockTransfer');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-3">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar stock transfer" class="form-control" ng-model="filtroStockTransfer" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha inicial</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Inicial_StockTransfer">
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha final</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Final_StockTransfer">
+               </div>
+               <div class="col-sm-2">
+                 <button class="btn btn-info" ng-click="filtrarStockTransferFecha();" style="margin-top:25px;">Consultar</button>
+               </div>
+            </div>
+            <div class="row" ng-if="cantidadStockTransferFiltrados === 0" style="margin-top:20px;">
+              <div class="col-sm-12">
+                <label>No se encontraron transferencias de inventario entre el rango de fechas seleccionado</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Categoría</th>
+                  <th>Fecha creación</th>
+                  <th>Observaciones</th>
+				      <th>Número de referencia</th>
+                  <th>Monto Total</th>
+               </tr>
+               <tr ng-repeat="objST in filterDataST = (listaStockTransfer | filter: {Nombre_Categoria_Documento: filtroStockTransfer})
+               | limitTo:itemsPorPaginaStockTransfer:itemsPorPaginaStockTransfer*(pageStockTransfer-1)" ng-if="listaStockTransferFiltroFecha.length === 0">
+                  <td>{{objST.Nombre_Categoria_Documento}}</td>
+                  <td>{{objST.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{objST.Observaciones}}</td>
+				      <th>{{objST.Codigo_Documento}}</th>
+                  <td>{{objST.Monto_Total | currency : '₡' : 2}}</td>
+               </tr>
+               <tr ng-repeat="objST in filterDataST = (listaStockTransfer | filter: {Nombre_Categoria_Documento: filtroStockTransfer})
+               | limitTo:itemsPorPaginaStockTransfer:itemsPorPaginaStockTransfer*(pageStockTransfer-1)" ng-if="listaStockTransferFiltroFecha.length > 0">
+                  <td>{{objST.Nombre_Categoria_Documento}}</td>
+                  <td>{{objST.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{objST.Observaciones}}</td>
+				      <th>{{objST.Codigo_Documento}}</th>
+                  <td>{{objST.Monto_Total | currency : '₡' : 2}}</td>
+               </tr>
+            </table>
+         </div>
+      </div>
+   </div>
+</div> -->
+
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Gastos en ruta</strong></div>
+            <div class="row" style="margin-top:20px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorGastos" ng-change="setItemsPerPage(vistaPorGastos,'Gastos');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-3">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar gasto" class="form-control" ng-model="filtroGastos" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha inicial</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Inicial_Gastos">
+               </div>
+               <div class="col-sm-2">
+                 <label>Fecha final</label>
+                 <input type="date" class="form-control" ng-model="rangosFecha.Fecha_Final_Gastos">
+               </div>
+               <div class="col-sm-2">
+                 <button class="btn btn-info" ng-click="filtrarGastosFecha();" style="margin-top:25px;">Consultar</button>
+               </div>
+            </div>
+            <div class="row" ng-if="cantidadGastosFiltrados === 0" style="margin-top:20px;">
+              <div class="col-sm-12">
+                <label>No se encontraron gastos en ruta entre el rango de fechas seleccionado</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>Categoría</th>
+                  <th>Fecha creación</th>
+                  <th>Comentarios</th>
+				  <th>Número de referencia</th>
+                  <th>Monto</th>
+                  <th>Depósito asociado</th>
+               </tr>
+               <tr ng-repeat="gas in filterDataG = (listaGastosRuta | filter: {Nombre_Gasto: filtroGastos})
+               | limitTo:itemsPorPaginaGastos:itemsPorPaginaGastos*(pageGastos-1)" ng-if="listaGastosFiltroFecha.length === 0">
+                  <td>{{gas.Nombre_Gasto}}</td>
+                  <td>{{gas.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{gas.Comentarios}}</td>
+				  <th>{{gas.Codigo_Interfazado}}</th>
+                  <td>{{gas.Monto | currency : '₡' : 2}}</td>
+                  <td ng-if="gas.Codigo_Deposito === ''">SIN DEPÓSITO</td>
+                  <td ng-if="gas.Codigo_Deposito !== ''">{{gas.Codigo_Deposito}}</td>
+               </tr>
+               <tr ng-repeat="gas in filterDataG = (listaGastosRuta | filter: {Nombre_Gasto: filtroGastos})
+               | limitTo:itemsPorPaginaGastos:itemsPorPaginaGastos*(pageGastos-1)" ng-if="listaGastosFiltroFecha.length > 0">
+                  <td>{{gas.Nombre_Gasto}}</td>
+                  <td>{{gas.Fecha_Creacion | date: 'medium'}}</td>
+                  <td>{{gas.Comentarios}}</td>
+				  <th>{{gas.Codigo_Interfazado}}</th>
+                  <td>{{gas.Monto | currency : '₡' : 2}}</td>
+                  <td ng-if="gas.Codigo_Deposito === ''">SIN DEPÓSITO</td>
+                  <td ng-if="gas.Codigo_Deposito !== ''">{{gas.Codigo_Deposito}}</td>
+               </tr>
+            </table>
+            <!--<pagination total-items="totalItemsGastos" ng-model="pageGastos" ng-change="pageChanged();" class="pagination-sm"
+            items-per-page="itemsPorPaginaGastos" max-size="maximoItemsPagina"></pagination>-->
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title"><strong style="text-transform: uppercase;">Conteos</strong></div>
+            <div class="row" style="margin-top:20px;">
+               <div class="col-sm-1">
+                  <select class="form-control" ng-model="vistaPorConteos" ng-change="setItemsPerPage(vistaPorConteos,'Conteos');" style="margin-top:25px;">
+                     <option>3</option>
+                     <option>5</option>
+                     <option>10</option>
+                     <option>20</option>
+                     <option>50</option>
+                     <option>100</option>
+                     Todos <option>{{totalProductosContados}}</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">items por página</p>
+               </div>
+               <div class="col-sm-2">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar producto" class="form-control" ng-model="filtroConteos" style="margin-top:25px;">
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                  <div class="fom-group">
+                    <div class="checkbox" style="margin-top:30px;">
+                     <label><input type="checkbox" ng-model="filtroDiferencias.mostrarDiferencias">Filtrar por diferencias</label>
+                    </div>
+                  </div>
+               </div>
+               <div class="col-sm-2">
+                  <select class="form-control" ng-model="codigoConteoSeleccionado" ng-change="seleccionarConteo(codigoConteoSeleccionado);" style="margin-top:25px;">
+                     <option>TODOS</option>
+                     <option ng-repeat="cod in listaCodigosConteos">{{cod}}</option>
+                  </select>
+               </div>
+               <div class="col-sm-2">
+                  <p style="margin-top:25px;">Filtrar por conteo</p>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+           <table class="table table-striped">
+             <tr>
+               <th>Documento</th>
+               <th>Conteo</th>
+               <th>Ajuste aplicado</th>
+               <th>Código</th>
+               <th>Producto</th>
+               <th>Cant. Contada</th>
+               <th>Cant. Inventario</th>
+               <th>Diferencia</th>
+			   <th>Número de referencia</th>
+             </tr>
+             <tr ng-repeat="con in listaConteos.slice(((paginaActualConteos-1)*itemsPorPaginaConteos),((paginaActualConteos)*itemsPorPaginaConteos)) | filter: filtroConteos"
+             ng-style="con.Cantidad_Diferencia != 0 && {'background-color':'#D9534F','color':'#FFF'}" ng-if="filtroDiferencias.mostrarDiferencias === false">
+               <td>{{con.Codigo_Documento}}</td>
+               <td>{{con.Numero_Conteo}}</td>
+               <td ng-if="con.Ajuste_Inventario === true">SÍ</td>
+               <td ng-if="con.Ajuste_Inventario === false">NO</td>
+               <td>{{con.Codigo_Producto}}</td>
+               <td>{{con.Nombre_Producto}}</td>
+               <td>{{con.Cantidad_Solicitada}}</td>
+               <td>{{con.Cantidad_Inventario}}</td>
+               <td>{{con.Cantidad_Diferencia}}</td>
+			      <td>{{con.Codigo_Interfazado}}</td>
+             </tr>
+             <tr ng-repeat="con in listaConteos.slice(((paginaActualConteos-1)*itemsPorPaginaConteos),((paginaActualConteos)*itemsPorPaginaConteos)) | filter: filtroConteos"
+             ng-style="con.Cantidad_Diferencia != 0 && {'background-color':'#D9534F','color':'#FFF'}" ng-if="filtroDiferencias.mostrarDiferencias === true && con.Cantidad_Diferencia != 0">
+               <td>{{con.Codigo_Documento}}</td>
+               <td>{{con.Numero_Conteo}}</td>
+               <td ng-if="con.Ajuste_Inventario === true">SÍ</td>
+               <td ng-if="con.Ajuste_Inventario === false">NO</td>
+               <td>{{con.Codigo_Producto}}</td>
+               <td>{{con.Nombre_Producto}}</td>
+               <td>{{con.Cantidad_Solicitada}}</td>
+               <td>{{con.Cantidad_Inventario}}</td>
+               <td>{{con.Cantidad_Diferencia}}</td>
+			      <td>{{con.Codigo_Interfazado}}</td>
+             </tr>
+           </table>
+         </div>
+      </div>
+   </div>
+</div>

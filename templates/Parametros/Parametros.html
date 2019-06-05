@@ -1,0 +1,102 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li class="active">Configuración</li>
+   <li class="active">Parámetros</li>
+</ol>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="row">
+               <div class="col-md-3">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar parámetro" class="form-control" ng-model="objetoParametro.Filtro_Parametros">
+                  </div>
+               </div>
+               <div class="col-md-6">
+                <div style="border: solid 0.5px #2323234f;padding: 1em;border-radius: 6px 6px 6px;">
+                    <input type="file" ng-model="myfile" base-sixty-four-input>                   
+
+
+                    <div  class="row" ng-if="myfile.filename != null">
+                      <div class="col col-md-6">
+                        <h4>Información del archivo</h4>
+                        <p><b>Nombre: </b> {{ myfile.filename }} </p>
+                        <p><b>Tamaño: </b> {{ myfile.filesize }} </p>
+                        <p><b>Tipo: </b> {{ myfile.filetype }} </p>
+                        <p><b>Formato: </b> 
+                          <select ng-model="myfile.fileFormat" ng-options="formato.Id as formato.Nombre for formato in listaFormatosExcel.resultado">
+                            
+                            
+                          </select> 
+                        </p>
+                        
+                      </div> 
+                      <div class="col col-md-6" style="text-align: center;">
+                        <span class="icon-docs" style="font-size: 9em;"></span><br>
+                        <button class="btn btn-info" ng-disabled="EsperandoRespuesta" ng-click="subirFile()" style="margin-top: 1em; float: right;">Subir</button>
+                      </div>                   
+                    </div>
+                  </div>
+                  <div style="border: solid 0.5px #2323234f;padding: 1em;border-radius: 6px 6px 6px;">
+                      <div  class="row">
+                          <div class="col col-md-6">
+                            <select ng-model="FormatoDescarga" ng-options="formato.Codigo as formato.Nombre for formato in listaFormatosExcel.resultado">
+                                    
+                                    
+                            </select> 
+                            
+                          </div>  
+                          <div class="col col-md-6">
+                              <button ng-if="FormatoDescarga" ng-disabled="EsperandoRespuesta" != null && FormatoDescarga != undefined" class="btn btn-info" style="" ng-click="descargarFile(FormatoDescarga)" style="margin-top: 1em; float: right;">Descargar Documento</button>
+                          </div>                
+                        </div>
+                  </div>                    
+              </div>
+               <div class="col-md-3">
+                 <button class="btn btn-info pull-right" ng-click="actualizarValorParametros();">Actualizar a parámetros</button>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+           <table class="table table-striped table-hover">
+              <tr>
+                 <th>ID</th>
+                 <th>Módulo</th>
+                 <th>Código</th>
+                 <th>Descripción</th>
+                 <th>Valor / Estado</th>
+              </tr>
+
+
+              
+              <tr ng-repeat="parametro in listaParametros | filter: objetoParametro.Filtro_Parametros | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                 <td>{{parametro.ID_Parametro}}</td>
+                 <td>{{parametro.Modulo_Parametro}}</td>
+                 <td>{{parametro.Nombre_Parametro}}</td>
+                 <td>{{parametro.Descripcion_Parametro}}</td>
+                 <td ng-if="parametro.Tipo_Parametro === 'BOOLEAN'"><input type="checkbox" ng-model="Lista_Parametros_Seleccionados[parametro.ID_Parametro]"></td>
+                 <td ng-if="parametro.Tipo_Parametro === 'INTEGER'"><input type="number" ng-model="Lista_Parametros_Seleccionados[parametro.ID_Parametro]" class="form-control" style="width:50%;"></td>
+                 <td ng-if="parametro.Tipo_Parametro === 'STRING'"><input type="text" ng-model="Lista_Parametros_Seleccionados[parametro.ID_Parametro]" class="form-control"></td>
+              </tr>
+           </table>
+           <!--<p style="margin-top:20px;">{{listaParametros.length}} resultados encontrados.</p>-->
+           <div class="row" style="margin-top:20px;">
+             <div class="col-md-12">
+               <div class="form-group">
+                  <label class="text-success" ng-if="statusProceso === 0"></label>
+                  <label class="text-success" ng-if="statusProceso === '200'">Parámetro(s) actualizado(s) correctamente.</label>
+               </div>
+             </div>
+           </div>
+           <div class="row" style="margin-top:20px;float:right;">
+             <div class="col-sm-12">
+               <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+               {{Pagina_Actual + 1}}/{{Calcular_Paginacion()}}
+               <button ng-disabled="Pagina_Actual >= Filtrar_Entidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+</div>

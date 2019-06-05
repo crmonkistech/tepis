@@ -1,0 +1,82 @@
+<div class="row">
+	<div class="col-sm-3">
+      <div class="panel widget bg-primary panel-no-border">
+         <div class="row row-table">
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{informacionDashboard.Facturas_Pendientes}}</div>
+               <div class="text-uppercase">Facturas pendientes</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="panel widget bg-green panel-no-border">
+         <div class="row row-table">
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{informacionDashboard.Cantidad_Clientes}}</div>
+               <div class="text-uppercase">Clientes activos</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="panel widget bg-purple panel-no-border">
+         <div class="row row-table">
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{informacionDashboard.Cantidad_Rutas}}</div>
+               <div class="text-uppercase">Rutas activas</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-3">
+      <div class="panel widget bg-warning panel-no-border">
+         <div class="row row-table">
+            <div class="col-xs-8 pv-lg">
+               <div class="h2 mt0">{{informacionDashboard.Cantidad_Jornadas}}</div>
+               <div class="text-uppercase">Jornadas activas</div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-6">
+      <div class="panel panel-default panel-demo">
+         <div class="panel-heading">
+            <div class="panel-title">Ventas mensuales</div>
+         </div>
+         <div class="panel-wrapper">
+            <div class="panel-body">
+               <canvas id="imagen1" height="400" width="400"></canvas>
+            </div>
+         </div>
+      </div>
+   </div>
+	 <div class="col-md-6">
+      <div class="panel panel-default panel-demo">
+         <div class="panel-heading">
+            <div class="panel-title">Montos de facturas (Total: {{montosFacturas.Total | currency:"‎₡":2}})</div>
+         </div>
+         <div class="panel-wrapper">
+            <div class="panel-body">
+               <canvas id="imagen2" height="400" width="400"></canvas>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-md-6">
+      <div class="panel panel-default panel-demo">
+         <div class="panel-heading">
+            <div class="panel-title">Montos de recibos de dinero mensuales (Total: {{montosRecibosDinero.Monto_Total | currency:"‎₡":2}})</div>
+         </div>
+         <div class="panel-wrapper">
+            <div class="panel-body">
+               <canvas id="imagen3" height="400" width="400"></canvas>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,267 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Documentos</li>
+    <li class="active">Proceso de pedidos</li>
+</ol>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="panel">
+
+            <div class="panel-body">
+
+                <aside class="row">
+
+                    <form name="userForm"  ng-submit="ProcesarPedido(userForm.$valid)" >
+
+                        <div class="col-sm-12">
+
+                            <div class="col-sm-4">
+
+                                <div class="row" style="padding-bottom: 5px">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class='input-group date' id='dpFechaInicio'>
+                                                <input id='txt_FI' type='text' class="form-control"
+                                                    placeholder="Fecha inicial" ng-model="FechaInicio" required/>
+                                                <span class="input-group-addon">
+                                                    <span class="icon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class='input-group date' id='dpFechaFinal'>
+                                                <input id='txt_FF' type='text' class="form-control"
+                                                    placeholder="Fecha final" ng-model="FechaFinal" required/>
+                                                <span class="input-group-addon">
+                                                    <span class="icon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="padding-bottom: 5px">
+                                    <div class="col-sm-12">
+
+                                        <div class="row">
+
+                                            <div class="form-group">
+                                                <label for="input"
+                                                    class="col-sm-12 col-md-12 col-lg-12 control-label">Rutas:</label>
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <select name="lst_rutas_cb" id="input" class="form-control"
+                                                        required="required" ng-model="RutaCBSeleccionada">
+                                                        <option selected="true" disabled="disabled" value="">Seleccionar
+                                                            ruta</option>
+                                                        <option ng-repeat="rutaCB in ListaRutas_cb"
+                                                            value="{{rutaCB.ID_Ruta}}">{{rutaCB.Nombre_Ruta}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <br>
+
+                                        <strong>Lista rutas por usuario:</strong>
+                                        <a href="" style="padding-left: 5px;" ng-click="MarcarTodasLasRutas()">
+                                            Marcar todas</a>
+
+                                        <input type="text" class="form-control" placeholder="Buscar rutas"
+                                            ng-model='Txt_Rutas' ng-change='FiltrarRutas()'>
+
+                                        <br>
+
+                                        <section ng-if="!CargandoTareas">
+
+                                            <ul id="lst_rutas" style="height:300px; overflow: auto;">
+                                                <li ng-repeat="ruta in ListaRutas_chk">
+                                                    <div class="checkbox">
+                                                        <label><input type="checkbox" value="{{ruta.ID_Ruta_Usuario}}"
+                                                                ng-model="ListaRutas_chkSeleccionadas"
+                                                                ng-click="SeleccionarRutasCHK(ruta.ID_Ruta_Usuario);"
+                                                                ng-checked="ListaRutas_chkSeleccionadas | contains:ruta.ID_Ruta_Usuario" />
+                                                            {{ruta.Nombre_Usuario}}</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                        </section>
+
+                                        <div ng-if="CargandoTareas" class="alert" role="alert">
+                                            <div class="spinner">
+                                                <div class="double-bounce1"></div>
+                                                <div class="double-bounce2"></div>
+                                            </div>
+                                            <span class="lbl_cargando_log">Cargando...</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+
+                                        <div class="row">
+
+                                            <strong>Documentos pedidos:</strong>
+                                            <a href="" style="padding-left: 5px;" ng-click="MarcarTodosLosDocumentos()">
+                                                Marcar todas</a>
+
+                                            <input type="text" class="form-control" placeholder="Buscar documentos"
+                                                ng-model='Txt_Documentos' ng-change='FiltrarRutasDocumentos()'>
+
+                                            <br>
+
+                                            <section ng-if="!CargandoDocumentos">
+                                                <ul class="list-group" id="lst_documentos"
+                                                    style="height:480px; overflow: auto;">
+
+                                                    <li class="list-group-item"
+                                                        ng-repeat="pedido in ListaDocumentosPedidos">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" value="{{pedido.ID_Documento}}"
+                                                                    ng-model="ListaDocumentosPedidosSeleccionados"
+                                                                    ng-click="SeleccionarDocumentosCHK(pedido.ID_Documento);"
+                                                                    ng-checked="ListaDocumentosPedidosSeleccionados | contains:pedido.ID_Documento" />
+
+                                                                <section>
+                                                                    <label>
+                                                                        <strong>Documento:
+                                                                            {{pedido.Codigo_Documento}}</strong>
+                                                                        / <strong>Fecha:</strong>
+                                                                        {{pedido.Fecha_Creacion}}
+                                                                        / <strong>Monto total:</strong>
+                                                                        {{pedido.Simbolo}}{{pedido.Monto_Total.toFixed(2)}}
+                                                                        / <strong>Usuario:</strong>
+                                                                        {{pedido.Nombre_Usuario}}
+                                                                    </label>
+                                                                    <br>
+
+                                                                    <a href="" style="padding-left: 35px;"
+                                                                        ng-click="MostrarDetallesMDL(pedido.ID_Documento)">
+                                                                        Ver detalles</a>
+
+                                                                </section>
+
+                                                            </label>
+                                                        </div>
+
+                                                    </li>
+                                                </ul>
+                                            </section>
+
+                                            <div ng-if="CargandoDocumentos" class="alert" role="alert">
+                                                <div class="spinner">
+                                                    <div class="double-bounce1"></div>
+                                                    <div class="double-bounce2"></div>
+                                                </div>
+                                                <span class="lbl_cargando_log">Cargando...</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div style="padding: 5px; text-align: left;" class="row">
+
+                                    <section class="col-sm-12">
+                                        <button type="submit" 
+                                        class="btn btn-success btn-md">Procesar
+                                            pedido</button>
+                                    </section>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </aside>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mdl_detalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true" data-backdrop="false">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>
+                                Detalles del pedido:
+                            </strong>
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" style="height:400px; overflow: auto;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad solicitada</th>
+                                            <th>Embalaje</th>
+                                            <th>Subtotal</th>
+                                            <th>Impuesto</th>
+                                            <th>Descuento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="producto in ListaDetalleDocumentosPedidos">
+                                            <th scope="row">{{producto.Codigo_Producto}}</th>
+                                            <td>{{producto.Nombre_Producto}}</td>
+                                            <td>{{producto.Cantidad_Solicitada}}</td>
+                                            <td>{{producto.Nombre_Embalaje}}</td>
+                                            <td>{{producto.Simbolo}}{{producto.Subtotal_Producto.toFixed(2)}}</td>
+                                            <td>{{producto.Simbolo}}{{producto.Impuesto_Producto.toFixed(2)}}</td>
+                                            <td>{{producto.Simbolo}}{{producto.Descuento_Producto.toFixed(2)}}</td>
+                                            <td>{{producto.Simbolo}}{{producto.Total_Producto.toFixed(2)}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 15px; text-align: right;" class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

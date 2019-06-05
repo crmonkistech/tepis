@@ -1,0 +1,281 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Rutas</li>
+   <li class="active">Registrar ruta</li>
+</ol>
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel">
+      <div class="panel-heading">
+         <div class="panel-title">Formulario de registro</div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+               <label class="control-label">Nombre</label>
+               <input type="text" class="form-control" ng-model="nuevaRuta.Nombre_Ruta">
+            </div>
+            <div class="form-group">
+               <label>Código</label>
+               <input type="text" class="form-control" ng-model="nuevaRuta.Codigo_Ruta">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+                <label class="text-success" ng-if="statusProceso === 0"></label>
+                <label class="text-danger" ng-if="statusProceso === '-1'">
+                   Error. El nombre y/o código de la ruta ya se encuentra registrado en el sistema.
+                </label>
+                <label class="text-danger" ng-if="statusProceso === 100">
+                   Error. Por favor complete los campos del formulario.
+                </label>
+                <label class="text-danger" ng-if="statusProceso === 300">
+                   Error. Debe agregar al menos un cliente a un día de la semana.
+                </label>
+                <label class="text-danger" ng-if="statusProceso === 400">
+                   Error. Debe asignar al menos un usuario a la ruta.
+                </label>
+                <label class="text-danger" ng-if="statusProceso === 500">
+                   Error. Debe asignar al menos un periodo a la ruta.
+                </label>
+                <label class="text-success" ng-if="statusProceso === '200'">Ruta registrada correctamente</label>
+             </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="clearfix">
+              <div class="form-group">
+                  <button class="btn btn-info pull-right" style="margin-top:25px;" ng-click="agregarRuta();">Crear ruta</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-2">
+              <select class="form-control" ng-model="vistaPor" ng-change="setItemsPerPage(vistaPor);">
+                  <option>3</option>
+                  <option>5</option>
+                  <option>10</option>
+                  <option>20</option>
+                  <option>50</option>
+                  <option>100</option>
+              </select>
+          </div>
+          <div class="col-sm-2">
+              <p style="margin-top:7px;">items por página</p>
+          </div>
+          <div class="col-sm-4">
+              <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Buscar cliente..." ng-model="objetoRuta.Filtro_Cliente" ng-keypress="buscarClientesEnter($event)">
+                  <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" ng-click="obtenerClientes();">
+                          <span class="icon-magnifier"></span>
+                      </button>
+                  </span>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <center>
+            <p ng-if="obteniendoClientes" style="margin-top:20px;">Obteniendo información...</p>
+        </center>
+        <center>
+            <p ng-if="busquedaSinResultados" style="margin-top:10px;">
+               No se encontraron resultados que coincidan con el criterio de búsqueda
+            </p>
+            <p ng-if="!busquedaSinResultados"></p>
+         </center>
+        <table class="table table-hover table-striped">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Codigo</th>
+            <th>Opciones</th>
+          </tr>
+          <tr ng-repeat="cli in listaClientes.slice(((paginaActual-1)*itemsPorPagina),((paginaActual)*itemsPorPagina))" ng-style="cli.Eliminado === true && {'background-color':'#B22222','color':'#FFF'}">
+            <td>{{cli.ID_Cliente}}</td>
+            <td>{{cli.Nombre_Cliente}}</td>
+            <td>{{cli.Codigo_Cliente}}</td>
+            <td><button class="btn btn-success" ng-click="agregarClienteRuta(cli)">Agregar a la ruta</button></td>
+          </tr>
+        </table>
+        <p ng-if="totalItems > 0" style="margin-top:20px;">Resultados encontrados: {{totalItems}}</p>
+        <pagination
+          total-items="totalItems"
+          ng-model="paginaActual"
+          ng-change="pageChanged();"
+          class="pagination-sm"
+          items-per-page="itemsPorPagina"
+          max-size="maximoItemsPagina"></pagination>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-heading">
+         <div class="row">
+           <div class="col-md-2">
+             <div class="panel-title">Clientes en ruta</div>
+           </div>
+           <div class="col-md-2">
+             <label>Filtrar cliente por día</label>
+             <select class="form-control" ng-model="filtroDia.Dia_Seleccionado">
+               <option>Todos</option>
+               <option>Lunes</option>
+               <option>Martes</option>
+               <option>Miércoles</option>
+               <option>Jueves</option>
+               <option>Viernes</option>
+               <option>Sábado</option>
+               <option>Domingo</option>
+             </select>
+           </div>
+         </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped table-hover">
+          <tr>
+            <th style="width:7%;">Ordenar</th>
+            <th style="width:10%;">Índice</th>
+            <th>Nombre</th>
+            <th>Codigo</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miercoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+            <th>Sabado</th>
+            <th>Domingo</th>
+          </tr>
+          <tr ng-repeat="cli in clientesAgregados | myfilter: filtroDia.Dia_Seleccionado track by $index" ng-style="cli.Eliminado === true && {'background-color':'#B22222','color':'#FFF'}">
+            <td>
+              <button ng-click="moverPosicionAbajo($index)"><span class="icon-arrow-down" ng-style="cli.Eliminado === true && {'color':'#656565'}"></span></button>
+              <button ng-click="moverPosicionArriba($index)"><span class="icon-arrow-up" ng-style="cli.Eliminado === true && {'color':'#656565'}"></span></button>
+            </td>
+            <td><input type="number" class="form-control" style="width:50%;" ng-model="listaOrdenamientoClientes[cli.ID_Cliente]"></td>
+            <td>{{cli.Nombre_Cliente}}</td>
+            <td>{{cli.Codigo_Cliente}}</td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.L"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.K"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.M"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.J"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.V"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.S"></td>
+            <td><input type="checkbox" ng-model="cli.Dias_Ruta.D"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+       <div class="panel-heading">
+         <div class="row">
+           <div class="col-sm-12">
+               <div class="panel-title" style="margin-bottom:10px;">Listado de usuarios</div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-xs-1">
+              <select class="form-control" ng-model="vistaPorUsuarios" ng-change="setItemsPerPageUsuarios(vistaPorUsuarios);">
+                 <option>3</option>
+                 <option>5</option>
+                 <option>10</option>
+                 <option>20</option>
+                 <option>50</option>
+                 <option>100</option>
+              </select>
+           </div>
+           <div class="col-sm-3">
+              <input type="text" class="form-control" placeholder="Buscar usuario" ng-model="filtroUsuario">
+           </div>
+         </div>
+       </div>
+       <div class="panel-body">
+          <table class="table table-striped table-hover">
+             <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Usuario</th>
+                <th>Seleccionar</th>
+             </tr>
+             <tr ng-repeat="usu in listaUsuarios.slice(((paginaActualUsuarios-1)*itemsPorPaginaUsuarios),((paginaActualUsuarios)*itemsPorPaginaUsuarios))
+             | filter: filtroUsuario">
+                <td>{{usu.ID_Usuario}}</td>
+                <td>{{usu.Nombre}} {{usu.Apellidos}}</td>
+                <td>{{usu.Nombre_Usuario}}</td>
+                <td>
+                  <input type="checkbox" ng-model="Lista_Usuarios_Seleccionados[usu.ID_Usuario]">
+                </td>
+             </tr>
+          </table>
+       </div>
+       <div class="panel-footer" style="background: #FFF;border:#FFF;">
+          <pagination total-items="totalItemsUsuarios"
+          ng-model="paginaActualUsuarios"
+          ng-change="pageChanged();"
+          class="pagination-sm"
+          items-per-page="itemsPorPaginaUsuarios"
+          max-size="maximoItemsPaginaUsuarios"></pagination>
+       </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+       <div class="panel-heading">
+         <div class="row">
+           <div class="col-sm-12">
+               <div class="panel-title" style="margin-bottom:10px;">Listado de periodos</div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-sm-3">
+              <input type="text" class="form-control" placeholder="Buscar periodo" ng-model="filtroPeriodos">
+           </div>
+         </div>
+       </div>
+       <div class="panel-body">
+          <table class="table table-striped table-hover">
+             <tr>
+                <th>ID</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+             </tr>
+             <tr ng-repeat="periodo in listaPeriodos | filter: filtroPeriodos | startFrom: currentPagePeriodos * pageSize | limitTo: pageSize">
+                <td>{{periodo.ID_Periodo}}</td>
+                <td>{{periodo.Codigo_Periodo}}</td>
+                <td>{{periodo.Nombre_Periodo}}</td>
+                <td>
+                  <input type="checkbox" ng-model="Lista_Periodos_Seleccionados[periodo.ID_Periodo]">
+                </td>
+             </tr>
+          </table>
+          <div class="row" style="margin-top:20px;float:right;">
+            <div class="col-sm-12">
+              <button ng-disabled="currentPagePeriodos === 0" ng-click="currentPagePeriodos = currentPagePeriodos - 1" class="btn btn-default">Anterior</button>
+              {{currentPagePeriodos + 1}}/{{numeroPaginasPeriodos()}}
+              <button ng-disabled="currentPagePeriodos >= filtrarPeriodos().length / pageSize - 1" ng-click="currentPagePeriodos = currentPagePeriodos + 1" class="btn btn-default">Siguiente</button>
+            </div>
+          </div>
+       </div>
+    </div>
+  </div>
+</div>

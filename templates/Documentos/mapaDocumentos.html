@@ -1,0 +1,102 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Documentos</li>
+    <li class="active">Mapa de documentos</li>
+</ol>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel">
+
+            <div class="panel-body">
+
+                <div class="col-sm-3">
+
+                    <div class="row" style="padding-bottom: 5px">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class='input-group date' id='dpFechaInicio'>
+                                    <input id='txt_FI' type='text' class="form-control" placeholder="Fecha inicial"
+                                        ng-model="FechaInicio" />
+                                    <span class="input-group-addon">
+                                        <span class="icon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class='input-group date' id='dpFechaFinal'>
+                                    <input id='txt_FF' type='text' class="form-control" placeholder="Fecha final"
+                                        ng-model="FechaFinal" />
+                                    <span class="input-group-addon">
+                                        <span class="icon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+
+                            <input type="text" 
+                                class="form-control" 
+                                placeholder="Buscar usuario" 
+                                ng-model="TextoFiltrado"
+                                ng-change='FiltrarListaUsr()'>
+
+                            <br>
+                            <div ng-if="CargandoTareas" class="alert" role="alert">
+                                <div class="spinner">
+                                    <div class="double-bounce1"></div>
+                                    <div class="double-bounce2"></div>
+                                </div>
+                                <span class="lbl_cargando_log">Cargando...</span>
+                            </div>
+                            <section ng-if="!CargandoTareas" class="" style="height:300px; overflow: auto;">
+                                <strong>Lista Usuarios:</strong>
+                                <ul id="lst_usuarios">
+                                    <li ng-repeat="usuario in ListaUsuarios">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" value="{{usuario.ID_Usuario}}" ng-model="ListaUsuariosSeleccionados"
+                                                    ng-change="SeleccionarUsuariocCHK(usuario.ID_Usuario);" />
+                                                {{usuario.Nombre_Usuario}}</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-top: 3px; text-align: right;">
+                        <section class="col-sm-12">
+                            <button type="button" class="btn btn-success" ng-click="ObtenerMarcadores();">Buscar</button>
+                        </section>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="map" style="width:100%;height:500px;"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div>
+                                        <aside ng-repeat="categoria in ListaCategoriasMapa" class="alinearIzq">{{categoria.Nombre_Categoria_Documento}}:<section
+                                                class="circuloMap alinearDer" ng-style="{'background-color':categoria.ColorMarcadorMapa}"></section>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+</div>

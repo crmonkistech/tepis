@@ -1,0 +1,75 @@
+<div class="row" style="margin-top:10px;">
+  <div class="col-md-12">
+    <ul class="breadcrumb breadcrumb-style">
+        <li>Inicio</li>
+        <li class="active">Monitoreo</li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="col-md-3">
+          <input type="text" class="form-control" placeholder="Buscar monitoreo" ng-model="Objeto_Controlador.Filtro_Monitoreo">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel" style="margin-bottom:20px;">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <tr>
+            <th>Nombre del monitoreo</th>
+            <th>Opciones</th>
+          </tr>
+          <tr ng-repeat="item in Lista_Monitoreos | filter: Objeto_Controlador.Filtro_Monitoreo | startFrom: Pagina_Actual_Monitoreos * Cantidad_Items | limitTo: Cantidad_Items">
+            <td>{{item.nombre_consulta}}</td>
+            <td> <button ng-click="Ejecutar_Query(item.consulta_sql);" class="btn btn-info">Ejecutar query</button> </td>
+          </tr>
+        </table>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual_Monitoreos === 0" ng-click="Pagina_Actual_Monitoreos = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual_Monitoreos + 1}}/{{Calcular_Paginacion_Monitoreos()}}
+            <button ng-disabled="Pagina_Actual_Monitoreos >= Filtrar_Entidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual_Monitoreos = Pagina_Actual_Monitoreos + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="Lista_Informacion.length > 0">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <tr> <th ng-repeat="titulo in Lista_Encabezados">{{titulo}}</th></tr>
+          <tr ng-repeat="linea in Lista_Informacion | startFrom: Pagina_Actual_Resultado * Cantidad_Items | limitTo: Cantidad_Items">
+            <td ng-repeat="item in Lista_Encabezados">{{linea[item]}}</td>
+          </tr>
+        </table>
+        <p style="margin-top:20px;">{{Lista_Informacion.length}} registros encontrados.</p>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual_Resultado === 0" ng-click="Pagina_Actual_Resultado = Pagina_Actual_Resultado - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual_Resultado + 1}}/{{Calcular_Paginacion_Resultado()}}
+            <button ng-disabled="Pagina_Actual_Resultado >= Lista_Informacion.length / Cantidad_Items - 1" ng-click="Pagina_Actual_Resultado = Pagina_Actual_Resultado + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="Lista_Informacion.length === 0">
+  <div class="col-md-12">
+    <p>{{Lista_Informacion.length}} registros encontrados.</p>
+  </div>
+</div>

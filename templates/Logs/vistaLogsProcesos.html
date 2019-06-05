@@ -1,0 +1,109 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Logs</li>
+    <li class="active">Procedimientos</li>
+</ol>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel">
+
+            <div class="panel-body">
+
+                <div class="col-sm-12">
+
+                    <form name="userForm" ng-submit="EventoActualizar(userForm.$valid)" novalidate>
+
+                        <div class="row">
+
+                            <div class="col-lg-4">
+                                <label>Procedimientos:</label>
+                                <select class="form-control ng-pristine ng-valid ng-empty ng-touched" required ng-model="ObjetoEnvioProcedimiento.Procedimiento"
+                                    ng-change="BuscarParametros();">
+                                    <option selected="true" disabled="disabled" value="">Seleccionar procedimiento</option>
+                                    <option ng-repeat="procesos in ListaProcesos" value="{{procesos.ID_Log_Catalogo_Procedimiento}}">{{procesos.Detalle_Procedimiento}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-4" ng-if="ListaParametros.includes('@id_bodega')">
+                                <label>Bodegas:</label>
+                                <select class="form-control ng-pristine ng-valid ng-empty ng-touched" required ng-model="ObjetoEnvioProcedimiento.Bodega">
+                                    <option selected="true" disabled="disabled" value="">Seleccionar bodega</option>
+                                    <option ng-repeat="bodega in ListaBodegas" value="{{bodega.ID_Bodega}}">{{bodega.Codigo_Bodega}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-4" ng-if="ListaParametros.includes('@id_empresa')">
+                                <label>Empresa:</label>
+                                <select class="form-control ng-pristine ng-valid ng-empty ng-touched" required ng-model="ObjetoEnvioProcedimiento.Empresa">
+                                    <option selected="true" disabled="disabled" value="">Seleccionar empresa</option>
+                                    <option ng-repeat="empresa in ListaEmpresas" value="{{empresa.ID_Empresa}}">{{empresa.Nombre_Empresa}}</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-4" ng-if="ListaParametros.includes('@id_company')">
+                                <label>Compañía:</label>
+                                <select class="form-control ng-pristine ng-valid ng-empty ng-touched" required ng-model="ObjetoEnvioProcedimiento.Empresa">
+                                    <option selected="true" disabled="disabled" value="">Seleccionar compañía</option>
+                                    <option ng-repeat="compannia in ListaCompanias" value="{{compannia.ID_Company}}">{{compannia.company}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-4" ng-if="ListaParametros.includes('@fechainicial')" data-ng-init="IniciarDatePicker()">
+                                <label>Fecha inicio:</label>
+                                <div class='input-group date' id='dpFechaInicio'>
+                                    <input id='txt_FI' name="txt_FI" type='text' class="form-control" placeholder="Fecha inicial"
+                                        ng-model="ObjetoEnvioProcedimiento.FechaInicio" required />
+                                    <span class="input-group-addon">
+                                        <span class="icon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" ng-if="ListaParametros.includes('@fechafinal')" data-ng-init="IniciarDatePicker()">
+                                <label>Fecha final:</label>
+                                <div class='input-group date' id='dpFechaFinal'>
+                                    <input id='txt_FF' name="txt_FF" type='text' class="form-control" placeholder="Fecha final"
+                                        ng-model="ObjetoEnvioProcedimiento.FechaFinal" required />
+                                    <span class="input-group-addon">
+                                        <span class="icon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-lg-1">
+                                <button type="submit" class="btn btn-primary btn-md" ng-disabled="userForm.$invalid">Actualizar</button>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div ng-if="ProcesoCargando" class="alert" role="alert">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                    <span class="lbl_cargando_log">Cargando...</span>
+                                </div>
+                                <div ng-if="ObjRespuestaProceso.Estado" class="alert {{ObjRespuestaProceso.attr}}" role="alert">{{ObjRespuestaProceso.Mensaje}}</div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Usuarios</li>
+   <li class="active">Editar usuario</li>
+</ol>
+<div class="row">
+   <div class="col-md-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de edición</div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-md-3">
+                  <div class="form-group">
+                     <label class="control-label">Código</label>
+                     <input type="text" class="form-control" ng-model="Objeto_Usuario.Nombre" disabled>
+                  </div>
+                  <div class="form-group">
+                     <label class="control-label">Usuario</label>
+                     <input type="text" class="form-control" ng-model="Objeto_Usuario.Nombre_Usuario" disabled>
+                  </div>
+                  <div class="form-group">
+                     <label class="control-label">Nombre</label>
+                     <input type="text" class="form-control" ng-model="Objeto_Usuario.Apellidos">
+                  </div>
+                  <div class="form-group">
+                     <input type="checkbox" ng-model="Objeto_Usuario.Habilitado"> <label> Usuario habilitado</label>
+                  </div>
+               </div>
+               <div class="col-md-3">
+                  <div class="form-group">
+                     <label class="control-label">Telefono</label>
+                     <input type="text" class="form-control" ng-model="Objeto_Usuario.Telefono">
+                  </div>
+                  <div class="form-group">
+                     <label class="control-label">Correo electrónico</label>
+                     <input type="text" class="form-control" ng-model="Objeto_Usuario.Correo">
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label">Contraseña</label>
+                    <div class="input-group">
+                      <span class="input-group-addon">
+                        <input type="checkbox" ng-model="Mostrar_Ocultar_Pass.Valor" ng-change="Funcionalidad_Checkbox();">
+                      </span>
+                      <input type="{{Tipo_Input}}" class="form-control" ng-model="Objeto_Usuario.Contrasena">
+                    </div>
+                  </div>
+               </div>
+               <div class="col-md-3">
+                 <div class="form-group">
+                    <label class="control-label">Rol asignado</label>
+                    <select class="form-control" ng-options="rol.ID_Rol as rol.Nombre_Rol for rol in Lista_Roles" ng-model="Objeto_Usuario.FK_ID_Rol"></select>
+                 </div>
+               </div>
+            </div>
+            <div class="row" ng-if="Estado_Proceso === 200">
+              <div class="col-md-12">
+                <label class="text-success">Usuario actualizado exitosamente.</label>
+              </div>
+            </div>
+         </div>
+         <div class="panel-footer" style="background: #FFF;border:#FFF;">
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button class="btn btn-primary" ng-click="Actualizar_Usuario();">Actualizar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

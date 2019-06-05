@@ -1,0 +1,184 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Documentos</li>
+    <li class="active">gráfica de rutas</li>
+</ol>
+
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="panel">
+            <div class="panel-body">
+                <aside class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="col-md-3">
+
+                            <div class="row" style="padding-bottom: 5px">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class='input-group date' id='dpFechaInicio'>
+                                            <input id='txt_FI' type='text' class="form-control"
+                                                placeholder="Fecha inicial" ng-model="FechaInicio" />
+                                            <span class="input-group-addon">
+                                                <span class="icon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class='input-group date' id='dpFechaFinal'>
+                                            <input id='txt_FF' type='text' class="form-control"
+                                                placeholder="Fecha final" ng-model="FechaFinal" />
+                                            <span class="input-group-addon">
+                                                <span class="icon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-bottom: 5px">
+                                <div class="col-sm-12">
+
+                                    <strong>Lista rutas:</strong>
+                                    <a href="" style="padding-left: 5px;" ng-click="MarcarTodasLasRutas()">
+                                        Marcar todas</a>
+
+                                    <input type="text" class="form-control" placeholder="Buscar rutas"
+                                        ng-model='Txt_Rutas' ng-change='FiltrarRutas()'>
+
+                                    <br>
+
+                                    <section ng-if="!CargandoTareas">
+
+                                        <ul id="lst_rutas" style="height:380px; overflow: auto;">
+                                            <li ng-repeat="ruta in ListaRutas">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" value="{{ruta.ID_Ruta_Usuario}}"
+                                                            ng-model="ListaRutasSeleccionadas"
+                                                            ng-click="SeleccionarRutasCHK(ruta.ID_Ruta_Usuario);"
+                                                            ng-checked="ListaRutasSeleccionadas | contains:ruta.ID_Ruta_Usuario" />
+                                                        {{ruta.Nombre_Usuario}}</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+
+                                    </section>
+
+                                    <div ng-if="CargandoTareas" class="alert" role="alert">
+                                        <div class="spinner">
+                                            <div class="double-bounce1"></div>
+                                            <div class="double-bounce2"></div>
+                                        </div>
+                                        <span class="lbl_cargando_log">Cargando...</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="row">
+
+                                <div ng-if="CargandoGrafica" class="alert" role="alert">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                    <span class="lbl_cargando_log">Cargando...</span>
+                                </div>
+
+                                <div style="height:520px; overflow: auto; margin-top: 10px;">
+                                    <div id="chart_div"></div>
+                                    <div id="error_msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="mdl_detalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true" data-backdrop="false">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>
+                                Detalles de documentos: ({{usuarioDefinido}})
+                            </strong>
+                            <hr>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" style="height:400px; overflow: auto;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Tipo documento</th>
+                                            <th>Estado de visita</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="documento in ListaDetallesDocumentosGrafico">
+                                            <th scope="row">{{documento.ID_Documento}}</th>
+                                            <td>{{documento.Nombre_Cliente}}</td>
+                                            <td>{{documento.Fecha_Creacion}}</td>
+                                            <td>{{documento.Detalle_Documento}}</td>
+                                            <td>
+                                                <aside ng-if="documento.Estado_Visita" class="alinearIzq">
+                                                    <section class="circuloMap alinearDer"
+                                                        style="background-color:green">
+                                                    </section>
+                                                </aside>
+                                                <aside ng-if="!documento.Estado_Visita" class="alinearIzq">
+                                                    <section class="circuloMap alinearDer"
+                                                        style="background-color:red">
+                                                    </section>
+                                                </aside>
+                                                <!-- {{documento.Estado_Visita}} -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 15px; text-align: right;" class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    </div>
+                    <br>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>

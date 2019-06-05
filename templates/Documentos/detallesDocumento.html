@@ -1,0 +1,316 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li>Documentos</li>
+    <li class="active">Detalles</li>
+</ol>
+<div class="row" ng-if="ID_Categoria_Documento === 8">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Estado del depósito</label>
+            <select class="form-control" ng-options="estado.ID_Estado_Deposito as estado.Nombre_Estado_Deposito for estado in listaEstadosDepositos"
+            ng-model="depositoSeleccionado.FK_ID_Estado" ng-change="actualizarEstadoDepositos();">
+            </select>
+          </div>
+          <div class="col-md-6">
+             <div class="alert" style="border-color:#DDD;" ng-show="Mostrar_Alert_Deposito">
+               <strong>¿Desea cambiar el estado del Depósito?</strong>
+               <button class="btn btn-danger" style="margin-left:50px;" ng-click="cancelarActualizarDeposito();">Cancelar</button>
+               <button class="btn btn-success" style="margin-left:20px;" ng-click="confirmarActualizarDeposito();">Confirmar</button>
+             </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <div class="col-md-5">
+            <div class="alert alert-success" ng-show="Estado_Proceso === '200'">
+              <strong>Estado del Depósito actualizado correctamente.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" ng-if="ID_Categoria_Documento === 5">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Ajuste de inventario</label>
+            <select class="form-control" ng-options="estado.ID_Estado as estado.Nombre_Estado for estado in listaEstadosConteo"
+            ng-model="conteoSeleccionado.Ajuste_Aplicado" ng-change="actualizarEstadoConteo();">
+            </select>
+          </div>
+          <div class="col-md-6">
+             <div class="alert" style="border-color:#DDD;" ng-show="Mostrar_Alert_Conteo">
+               <strong>¿Desea ajustar el inventario del conteo?</strong>
+               <button class="btn btn-danger" style="margin-left:50px;" ng-click="cancelarActualizarConteo();">Cancelar</button>
+               <button class="btn btn-success" style="margin-left:20px;" ng-click="confirmarActualizarConteo();">Confirmar</button>
+             </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+          <div class="col-md-5">
+            <div class="alert alert-success" ng-show="Estado_Proceso_Conteo === '200'">
+              <strong>Ajuste de Inventario actualizado correctamente.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-12">
+                  <h4 ng-if="ID_Categoria_Documento !== 8">Detalles del Documento</h4>
+                  <h4 ng-if="ID_Categoria_Documento === 8">Recibos de Dinero asociados</h4>
+                </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="fom-group">
+                            <input type="text" placeholder="Buscar" class="form-control" ng-model="Objeto_Detalle.Filtro_Detalle">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 1 || ID_Categoria_Documento === 2 || ID_Categoria_Documento === 4 || ID_Categoria_Documento === 6">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th>Cantidad</th>
+                        <th>Embalaje</th>
+                        <th>Precio unitario</th>
+                        <th>Impuesto</th>
+                        <th>Descuento</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Nombre_Producto}}</td>
+                        <td>{{det.Codigo_Producto}}</td>
+                        <td>{{det.Cantidad_Solicitada}}</td>
+                        <td>{{det.Nombre_Embalaje}}</td>
+                        <td>{{det.Precio_Unitario | currency:"₡":2}}</td>
+                        <td>{{det.Impuesto_Producto | currency:"₡":2}}</td>
+                        <td>{{det.Descuento_Producto | currency:"₡":2}}</td>
+                        <td>{{det.Subtotal_Producto | currency:"₡":2}}</td>
+                    </tr>
+                </table>
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 3">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th>Cantidad</th>
+                        <th>Embalaje</th>
+                        <th>Motivo</th>
+                        <th>Precio unitario</th>
+                        <th>Impuesto</th>
+                        <th>Descuento</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Nombre_Producto}}</td>
+                        <td>{{det.Codigo_Producto}}</td>
+                        <td>{{det.Cantidad_Solicitada}}</td>
+                        <td>{{det.Nombre_Embalaje}}</td>
+                        <td>{{det.Nombre_Motivo}}</td>
+                        <td>{{det.Precio_Unitario | currency:"₡":2}}</td>
+                        <td>{{det.Impuesto_Producto | currency:"₡":2}}</td>
+                        <td>{{det.Descuento_Producto | currency:"₡":2}}</td>
+                        <td>{{det.Subtotal_Producto | currency:"₡":2}}</td>
+                    </tr>
+                </table>
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 5">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th>Embalaje</th>
+                        <th>Cantidad contada</th>
+                        <th>Cantidad inventario</th>
+                        <th>Diferencia</th>
+                    </tr>
+                    <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Nombre_Producto}}</td>
+                        <td>{{det.Codigo_Producto}}</td>
+                        <td>{{det.Nombre_Embalaje}}</td>
+                        <td>{{det.Cantidad_Solicitada}}</td>
+                        <td>{{det.Cantidad_Inventario}}</td>
+                        <td>{{det.Cantidad_Diferencia}}</td>
+                    </tr>
+                </table>
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 7">
+                    <tr>
+                        <th>Documento asociado</th>
+                        <th>Monto documento</th>
+                        <th>Monto del recibo</th>
+                        <th>Efectivo</th>
+                        <th>Transferencia</th>
+                        <th>Cheque</th>
+                    </tr>
+                    <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Codigo_Documento}}</td>
+                        <td>{{det.Total_Documento | currency:"₡":2}}</td>
+                        <td>{{det.Monto_Total | currency:"₡":2}}</td>
+                        <td>{{det.Monto_Efectivo | currency:"₡":2}}</td>
+                        <td>{{det.Monto_Transferencia | currency:"₡":2}}</td>
+                        <td>{{det.Monto_Cheque | currency:"₡":2}}</td>
+                    </tr>
+                </table>
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 8">
+                    <tr>
+                        <th>Recibo asociado</th>
+                        <th>Categoría</th>
+                        <th>Monto del recibo</th>
+                    </tr>
+                    <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Codigo_Recibo}}</td>
+                        <td>{{det.Nombre_Categoria_Recibo_Dinero}}</td>
+                        <td>{{det.Monto_Total | currency:"₡":2}}</td>
+                    </tr>
+                </table>
+                <table class="table table-striped" ng-if="ID_Categoria_Documento === 11">
+                  <tr>
+                      <th>Código Documento</th>
+                      <th>Código Producto</th>
+                      <th>Producto</th>
+                      <th>Embalaje</th>
+                      <th>Pedido</th>
+                      <th>Solicitado</th>
+                      <th>Trasladado</th>
+                      <th>Facturado</th>
+                  </tr>
+                  <tr ng-repeat="det in listaDetalles | filter: Objeto_Detalle.Filtro_Detalle | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                      <td>{{det.Codigo_Documento}}</td>
+                      <td>{{det.Codigo_Producto}}</td>
+                      <td>{{det.Nombre_Producto}}</td>
+                      <td>{{det.Nombre_Embalaje}}</td>
+                      <td>{{det.Q_Pedido}}</td>
+                      <td>{{det.QT_ST_Request}}</td>
+                      <td>{{det.Q_ST}}</td>
+                      <td>{{det.Q_Factura}}</td>
+                  </tr>
+              </table>
+            </div>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <div style="float:right;">
+                  <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-principal">Anterior</button>
+                  {{Pagina_Actual + 1}}/{{CalcularPaginacion()}}
+                  <button ng-disabled="Pagina_Actual >= FiltrarEntidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-principal">Siguiente</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="ID_Categoria_Documento === 2">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Detalle de bonificaciones</h4>
+                </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="fom-group">
+                            <input type="text" placeholder="Buscar" class="form-control" ng-model="Objeto_Bonificacion.Filtro_Bonificacion">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Producto solicitado</th>
+                        <th>Producto bonificado</th>
+                        <th>Bonificación</th>
+                        <th>Cantidad bonificada</th>
+                        <th>Cantidad entregada</th>
+                        <th>Descuento</th>
+                    </tr>
+                    <tr ng-repeat="det in listaBonificaciones | filter: Objeto_Bonificacion.Filtro_Bonificacion | startFrom: Pagina_Actual_B * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.Producto_Solicitado}}</td>
+                        <td>{{det.Producto_Bonificado}}</td>
+                        <td>{{det.Nombre_Bonificacion}}</td>
+                        <td>{{det.Cantidad_Bonificada}}</td>
+                        <td>{{det.Cantidad_Entregada}}</td>
+                        <td>{{det.Porcentaje_Descuento}}%</td>
+                    </tr>
+                </table>
+                <p style="color:#898989; margin-top:20px;" ng-if="ID_Categoria_Documento === 2 && listaBonificaciones.length === 0">Este documento no cuenta con bonificaciones aplicadas.</p>
+            </div>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <div style="float:right;">
+                  <button ng-disabled="Pagina_Actual_B === 0" ng-click="Pagina_Actual_B = Pagina_Actual_B - 1" class="btn btn-principal">Anterior</button>
+                  {{Pagina_Actual_B + 1}}/{{CalcularPaginacionB()}}
+                  <button ng-disabled="Pagina_Actual_B >= FiltrarEntidadB().length / Cantidad_Items - 1" ng-click="Pagina_Actual_B = Pagina_Actual_B + 1" class="btn btn-principal">Siguiente</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-if="ID_Categoria_Documento === 8">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Detalle de Gastos en Ruta</h4>
+                </div>
+              </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="fom-group">
+                            <input type="text" placeholder="Buscar" class="form-control" ng-model="Objeto_Gasto.Filtro_Gasto">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Código</th>
+                        <th>Monto</th>
+                        <th>Descripción</th>
+                        <th>Categoría</th>
+                    </tr>
+                    <tr ng-repeat="det in listaGastosRuta | filter: Objeto_Gasto.Filtro_Gasto | startFrom: Pagina_Actual_G * Cantidad_Items | limitTo: Cantidad_Items">
+                        <td>{{det.CodigoGastoEnRuta}}</td>
+                        <td>{{det.Monto | currency:"₡":2}}</td>
+                        <td>{{det.Comentarios}}</td>
+                        <td>{{det.Nombre_Gasto}}</td>
+                    </tr>
+                </table>
+                <p style="color:#898989; margin-top:20px;" ng-if="ID_Categoria_Documento === 8 && listaGastosRuta.length === 0">Este documento no cuenta con gastos en ruta asociados.</p>
+            </div>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <div style="float:right;">
+                  <button ng-disabled="Pagina_Actual_G === 0" ng-click="Pagina_Actual_G = Pagina_Actual_G - 1" class="btn btn-principal">Anterior</button>
+                  {{Pagina_Actual_G + 1}}/{{CalcularPaginacionG()}}
+                  <button ng-disabled="Pagina_Actual_G >= FiltrarEntidadG().length / Cantidad_Items - 1" ng-click="Pagina_Actual_G = Pagina_Actual_G + 1" class="btn btn-principal">Siguiente</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <button class="btn btn-primary pull-right" ng-click="State_Documentos();">Regresar</button>
+  </div>
+</div>

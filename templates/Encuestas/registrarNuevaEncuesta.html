@@ -1,0 +1,160 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Encuestas</li>
+   <li class="active">Registrar encuesta</li>
+</ol>
+<div class="row">
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de registro</div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-sm-8">
+                  <div class="form-group">
+                     <label class="control-label">Nombre de la encuesta</label>
+                     <input type="text" class="form-control" ng-model="nuevaEncuesta.Nombre_Encuesta">
+                  </div>
+                  <div class="form-group">
+                     <label>Descripción</label>
+                     <textarea class="form-control" ng-model="nuevaEncuesta.Descripcion"></textarea>
+                  </div>
+                  <div class="form-group">
+                     <label>Fecha de inicio</label>
+                     <input type="date" class="form-control" ng-model="nuevaEncuesta.Fecha_Inicio">
+                  </div>
+                  <div class="form-group">
+                     <label>Fecha de finalización</label>
+                     <input type="date" class="form-control" ng-model="nuevaEncuesta.Fecha_Finalizacion">
+                  </div>
+                  <div class="checkbox">
+                    <label><input type="checkbox" ng-model="nuevaEncuesta.Obligatoria">Obligatoria</label>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group">
+                   <label class="text-success" ng-if="statusProceso === 0"></label>
+                   <label class="text-danger" ng-if="statusProceso === 301">
+                      Error. Por favor complete los campos del formulario.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === '-1'">
+                      Error. Ya existe registrada una encuesta con ese nombre.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === 302">
+                      Error. Debe agregar al menos una pregunta a la encuesta actual.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === 303">
+                      Error. Debe seleccionar al menos un usuario a la encuesta.
+                   </label>
+                     <label class="text-success" ng-if="statusProceso === 300">Encuesta agregada correctamente</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="clearfix">
+                   <div class="pull-right">
+                      <button class="btn btn-info" ng-click="guardarEncuesta();">Crear encuesta</button>
+                   </div>
+                </div>
+              </div>
+            </div>
+         </div>
+      </div>
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Registrar pregunta</div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-8">
+                 <div class="form-group">
+                    <label class="control-label">Pregunta</label>
+                    <input type="text" class="form-control" ng-model="nuevaPregunta.Pregunta">
+                 </div>
+                 <div class="form-group">
+                    <label>Categoría</label>
+                    <select ng-options="categoriaP.ID_Categoria_Preguntas as categoriaP.Nombre_Categoria_Preguntas
+                    for categoriaP in listaCategoriasPreguntas"
+                    ng-model="nuevaPregunta.FK_ID_Categoria_Preguntas"
+                    class="form-control" ng-change="actualizarNombreCategoria();"></select>
+                 </div>
+                 <div class="checkbox">
+                   <label><input type="checkbox" ng-model="nuevaPregunta.Obligatoria">Obligatoria</label>
+                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group">
+                   <label class="text-success" ng-if="statusProceso === 0"></label>
+                   <label class="text-danger" ng-if="statusProceso === 201">
+                      Error. Por favor complete los campos del formulario.
+                   </label>
+                   <label class="text-success" ng-if="statusProceso === 200">Pregunta agregada correctamente</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="clearfix">
+                   <div class="pull-right">
+                      <button class="btn btn-info" ng-click="agregarPregunta();">Agregar pregunta</button>
+                   </div>
+                </div>
+              </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-8">
+     <div class="panel">
+        <div class="panel-heading">
+           <div class="panel-title">Preguntas de la encuesta</div>
+        </div>
+        <div class="panel-body">
+           <table class="table table-striped table-hover">
+              <tr>
+                 <th>Pregunta</th>
+                 <th>Categoría</th>
+                 <th>Obligatoria</th>
+                 <th>Opciones</th>
+              </tr>
+              <tr ng-repeat="pre in listaPreguntas">
+                 <td>{{pre.Pregunta}}</td>
+                 <td>{{pre.Nombre_Categoria_Preguntas}}</td>
+                 <td ng-if="pre.Obligatoria === true">Sí</td>
+                 <td ng-if="pre.Obligatoria === false">No</td>
+                 <td><button class="btn btn-sm btn-danger" ng-click="eliminarPregunta(pre);">Eliminar</button></td>
+              </tr>
+           </table>
+        </div>
+     </div>
+     <div class="panel">
+        <div class="panel-heading">
+           <div class="panel-title">Lista de usuarios</div>
+        </div>
+        <div class="panel-body">
+           <table class="table table-striped table-hover">
+              <tr>
+                 <th>ID</th>
+                 <th>Nombre completo</th>
+                 <th>Usuario</th>
+                 <th>Correo electrónico</th>
+                 <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="usu in listaUsuarios">
+                 <td>{{usu.ID_Usuario}}</td>
+                 <td>{{usu.Nombre}} {{usu.Apellidos}}</td>
+                 <td>{{usu.Nombre_Usuario}}</td>
+                 <td>{{usu.Correo}}</td>
+                 <td><input type="checkbox" ng-model="usuariosSeleccionados[usu.ID_Usuario]"></td>
+              </tr>
+           </table>
+        </div>
+     </div>
+   </div>
+</div>

@@ -1,0 +1,53 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Logs</li>
+   <li class="active">Interfaces SAP</li>
+</ol>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+           <div class="row">
+             <div class="col-md-2">
+               <button class="btn btn-info" ng-click="SAP_Lectura();">Interfaces de Lectura</button>
+             </div>
+             <div class="col-md-2">
+               <button class="btn btn-info" ng-click="SAP_Escritura();">Interfaces de Escritura</button>
+             </div>
+             <div class="col-md-2">
+               <button class="btn btn-info" ng-click="Hola();" ng-disabled="Obteniendo_Informacion_Logs">{{Texto_Boton_Logs_Lectura}}</button>
+             </div>
+           </div>
+         </div>
+         <div class="panel-body">
+           <table class="table">
+             <tr>
+               <th>Procedimiento</th>
+               <th>Fecha</th>
+               <th>Documento</th>
+               <th>Estado</th>
+               <th>Numero SAP</th>
+               <th>Error</th>
+             </tr>
+             <tr ng-repeat="log in Lista_Logs | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+               <td>{{log.Procedimiento}}</td>
+               <td>{{log.FechaLog}}</td>
+               <td>{{log.Documento}}</td>
+               <td>{{log.Estado}}</td>
+               <td>{{log.NumeroSAP}}</td>
+               <td>{{log.Error}}</td>
+             </tr>
+           </table>
+         </div>
+         <div class="panel-footer">
+           <div class="clearfix">
+             <div style="float:right;">
+               <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+               {{Pagina_Actual + 1}}/{{Calcular_Paginacion()}}
+               <button ng-disabled="Pagina_Actual >= Lista_Logs.length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+</div>

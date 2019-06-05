@@ -1,0 +1,57 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li class="active">Rutas</li>
+</ol>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="row">
+               <div class="col-md-3">
+                  <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buscar ruta" ng-model="objetoRutas.Filtro_Ruta" ng-keypress="buscarRutasEnter($event)">
+                      <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" ng-click="obtenerRutas();"> <span class="icon-magnifier"></span> </button>
+                      </span>
+                  </div>
+               </div>
+               <div class="col-md-9">
+                  <div class="fom-group">
+                     <button class="btn btn-info" ng-click="irANuevaRuta();" style="float:right;">Crear ruta</button>
+                  </div>
+                  <div class="fom-group">
+                     <button class="btn btn-info" ng-click="Crar_Documento_Recorridos('Reporte de Recorridos');">Reporte recorridos</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Código</th>
+                  <th>Opciones</th>
+               </tr>
+               <tr ng-repeat="rut in listaRutas | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                  <td>{{rut.ID_Ruta}}</td>
+                  <td>{{rut.Nombre_Ruta}}</td>
+                  <td>{{rut.Codigo_Ruta}}</td>
+                  <td><button class="btn btn-sm btn-warning" ng-click="editarRuta(rut.ID_Ruta);">Editar</button></td>
+               </tr>
+            </table>
+            <table style="display:none;" id="Tabla_Recorridos">
+            </table>
+         </div>
+         <div class="panel-footer">
+           <div class="clearfix">
+             <div style="float:right;">
+               <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+               {{Pagina_Actual + 1}}/{{Calcular_Paginacion()}}
+               <button ng-disabled="Pagina_Actual >= listaRutas.length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+</div>

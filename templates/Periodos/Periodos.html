@@ -1,0 +1,49 @@
+<div class="row" style="margin-top:10px;">
+  <div class="col-md-12">
+    <ul class="breadcrumb breadcrumb-style">
+        <li>Inicio</li>
+        <li class="active">Periodos</li>
+    </ul>
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Buscar periodo"
+            ng-model="Objeto_Periodo.Filtro_Periodo">
+          </div>
+          <div class="col-md-9">
+            <div class="clearfix">
+              <button class="btn btn-info pull-right" ng-click="NuevoPeriodo();">Crear periodo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Código</th>
+            <th>Procesos</th>
+          </tr>
+          <tr ng-repeat="periodo in Lista_Periodos | filter: Objeto_Periodo.Filtro_Periodo | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+            <td>{{periodo.ID_Periodo}}</td>
+            <td>{{periodo.Nombre_Periodo}}</td>
+            <td>{{periodo.Codigo_Periodo}}</td>
+            <td><button class="btn btn-warning" ng-click="EditarPeriodo(periodo.ID_Periodo)">Editar</button></td>
+          </tr>
+        </table>
+        <p style="margin-top:20px;">{{Lista_Periodos.length}} resultados encontrados.</p>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual + 1}}/{{CalcularPaginacion()}}
+            <button ng-disabled="Pagina_Actual >= FiltrarEntidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

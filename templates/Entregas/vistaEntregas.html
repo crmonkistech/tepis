@@ -1,0 +1,52 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li class="active">Entregas</li>
+</ol>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="row">
+               <div class="col-sm-3">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar ruta de entrega" class="form-control" ng-model="Objeto_Entrega.Filtro_Entrega">
+                  </div>
+               </div>
+               <div class="col-sm-2 col-sm-offset-7">
+                  <div class="fom-group">
+                     <button class="btn btn-info" ng-click="irANuevaEntrega();">Nueva ruta de entrega</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Código</th>
+                  <th>Estado</th>
+                  <th>Opciones</th>
+               </tr>
+               <tr ng-repeat="ruta in Lista_Entregas | filter: Objeto_Entrega.Filtro_Entrega | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                  <td>{{ruta.ID_Ruta_Entrega}}</td>
+                  <td>{{ruta.Nombre_Ruta_Entrega}}</td>
+                  <td>{{ruta.Codigo_Ruta_Entrega}}</td>
+                  <td>{{ruta.Nombre_Estado}}</td>
+                  <td><button class="btn btn-sm btn-warning" ng-click="editarEntrega(ruta.ID_Ruta_Entrega);">Editar</button></td>
+               </tr>
+            </table>
+            <p style="margin-top:20px;">Resultados encontrados: {{Lista_Entregas.length}}</p>
+         </div>
+         <div class="panel-footer">
+           <div class="clearfix">
+             <div style="float:right;">
+               <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-default">Anterior</button>
+               {{Pagina_Actual + 1}}/{{CalcularPaginacion()}}
+               <button ng-disabled="Pagina_Actual >= FiltrarEntidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-default">Siguiente</button>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+</div>

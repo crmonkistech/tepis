@@ -1,0 +1,59 @@
+<ol class="breadcrumb">
+    <li>Inicio</li>
+    <li class="active">Depósitos</li>
+</ol>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <select class="form-control" ng-model="vistaPor" ng-change="setItemsPerPage(vistaPor);">
+                            <option>3</option>
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <p style="margin-top:7px;">items por página</p>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="fom-group">
+                            <input type="text" placeholder="Buscar depósito" class="form-control" ng-model="filtroDeposito">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Número de referencia</th>
+                        <th>Usuario</th>
+                        <th>Banco</th>
+                        <th>Cuenta</th>
+                        <th>Monto</th>
+                        <th>Fecha creación</th>
+                        <th>Opciones</th>
+                    </tr>
+                    <tr ng-repeat="doc in data.slice(((paginaActual-1)*itemsPorPagina),((paginaActual)*itemsPorPagina)) | filter: filtroDeposito">
+                        <td>{{doc.id}}</td>
+                        <td>Codigo</td>
+                        <td>########</td>
+                        <td>Usuario</td>
+                        <td>Banco</td>
+                        <td>Cuenta</td>
+                        <td>Monto</td>
+                        <td>Fecha creación</td>
+                        <td><button class="btn btn-sm btn-warning" ng-click="verDetalles(doc.id);">Detalles</button></td>
+                    </tr>
+                </table>
+                <pagination total-items="totalItems" ng-model="paginaActual" ng-change="pageChanged();" class="pagination-sm" items-per-page="itemsPorPagina"></pagination>
+            </div>
+        </div>
+    </div>
+</div>

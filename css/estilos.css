@@ -1,0 +1,144 @@
+.loader {
+    border: 5px solid #898989; /* Light grey */
+    border-top: 5px solid #3A3F51; /* Blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+.loader-small {
+    border: 2px solid #FFF; /* Light grey */
+    border-top: 2px solid #3A3F51; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+
+.lbl_cargando_log{
+  margin-left: 30px;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.button-info-color{
+  background-color: #3A3F51;
+  color: #FFF;
+}
+
+.button-info-color:hover{
+  color:#FFF;
+}
+
+.panel-no-border{
+  border-radius: 0px !important;
+}
+
+.breadcrumb{
+  background-color: #3A3F51 !important;
+  color: #FFF !important;
+}
+
+.breadcrumb>.active{
+  color: #FFF !important;
+}
+
+#user-block-toggle{
+  color: #FFF;
+}
+
+.btn-info{
+  background-color: #009688 !important;
+
+}
+
+.btn-warning{
+  background-color: #FFB300 !important;
+}
+
+.btn-success{
+  background-color: #00BCD4 !important;
+}
+
+select option:hover {
+    margin: 40px;
+    background: #3A3F51;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.wrapper{
+  height: 100vh;
+}
+
+.map-icon-label .map-icon {
+  font-size: 1em !important;  
+  font-weight: bold !important; 
+  font-stretch: extra-condensed !important; 
+	color: #000000 !important; 
+	text-align: center !important;  
+  white-space: nowrap;
+  width:50px !important; 
+}
+
+.circuloMap{
+  height: 15px;
+  width: 15px;
+  border-radius: 10px;
+  align-self: flex-end;
+}
+
+.alinearIzq{
+  margin-top: 3px;
+  float: left;
+}
+.alinearDer{
+  margin-top: 4px;
+  margin-right: 5px;
+  margin-left: 2px;
+  float: right;
+}

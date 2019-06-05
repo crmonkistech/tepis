@@ -1,0 +1,41 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Documentos</li>
+   <li class="active">Registrar motivo de no venta</li>
+</ol>
+<div class="row">
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de registro</div>
+         </div>
+         <div class="panel-body">
+            <div class="form-group">
+               <label class="control-label">Nombre</label>
+               <input type="text" class="form-control" ng-model="nuevoMotivo.Nombre_Motivo">
+            </div>
+            <div class="form-group">
+               <label class="control-label">Descripción</label>
+               <textarea class="form-control" ng-model="nuevoMotivo.Descripcion"></textarea>
+            </div>
+            <div class="form-group">
+               <label class="text-success" ng-if="statusProceso === 0"></label>
+               <label class="text-danger" ng-if="statusProceso === '-1'">
+                  Error. El nombre del motivo ya se encuentra registrado en el sistema.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 100">
+                  Error. Por favor complete los campos del formulario.
+               </label>
+               <label class="text-success" ng-if="statusProceso === '200'">Motivo registrado correctamente</label>
+            </div>
+         </div>
+         <div class="panel-footer" style="background: #FFF;border:#FFF;">
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button class="btn btn-info" ng-click="agregarMotivo();">Guardar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

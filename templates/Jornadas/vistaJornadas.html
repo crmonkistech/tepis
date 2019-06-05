@@ -1,0 +1,56 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li class="active">Jornadas</li>
+</ol>
+<div class="row">
+   <div class="col-sm-12">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="row">
+               <div class="col-sm-3">
+                  <div class="fom-group">
+                     <input type="text" placeholder="Buscar jornada" class="form-control" ng-model="objetoJornada.Filtro_Jornada">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="panel-body">
+            <table class="table table-striped table-hover">
+               <tr>
+                  <th>ID</th>
+                  <th>Nombre completo</th>
+                  <th>Usuario</th>
+                  <th>Fecha inicio</th>
+                  <th>Fecha finalizacion</th>
+                  <th>Monto a entregar</th>
+                  <th>Opciones</th>
+               </tr>
+			         <tr ng-repeat="jor in listaUsuarios | filter: objetoJornada.Filtro_Jornada | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+                  <td>{{jor.ID_Jornada}}</td>
+                  <td>{{jor.Nombre}} {{jor.Apellidos}}</td>
+                  <td>{{jor.Nombre_Usuario}}</td>
+                  <td>{{jor.Fecha_Inicio | date:'medium'}}</td>
+                  <td ng-if="jor.Fecha_Finalizacion === '1995-03-25T00:00:00'"><p>En proceso</p></td>
+                  <td ng-if="jor.Fecha_Finalizacion !== '1995-03-25T00:00:00'">{{jor.Fecha_Finalizacion | date:'medium'}}</td>
+                  <td>{{jor.Monto_Depositos | currency : '₡' : 2}}</td>
+                  <td>
+                     <button class="btn btn-sm btn-warning" ng-click="editarJornada(jor.ID_Jornada,jor.ID_Usuario);"
+                     ng-if="jor.Fecha_Finalizacion === '1995-03-25T00:00:00'">Procesar</button>
+                     <button class="btn btn-sm btn-info" ng-click="editarJornada(jor.ID_Jornada,jor.ID_Usuario)"
+                     ng-if="jor.Fecha_Finalizacion !== '1995-03-25T00:00:00'">Consultar</button>
+                  </td>
+               </tr>
+            </table>
+         </div>
+		 <div class="panel-footer">
+              <div class="clearfix">
+                <div style="float:right;">
+                  <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1" class="btn btn-principal">Anterior</button>
+                  {{Pagina_Actual + 1}}/{{Calcular_Paginacion()}}
+                  <button ng-disabled="Pagina_Actual >= Filtrar_Entidad().length / Cantidad_Items - 1" ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-principal">Siguiente</button>
+                </div>
+              </div>
+            </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,51 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Periodos</li>
+   <li class="active">Registrar periodo</li>
+</ol>
+<div class="row">
+   <div class="col-sm-6">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de registro</div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                   <label class="control-label">Nombre del periodo</label>
+                   <input type="text" class="form-control" ng-model="Objeto_Periodo.Nombre_Periodo">
+                </div>
+                <div class="form-group">
+                   <label class="control-label">Código del periodo</label>
+                   <input type="text" class="form-control" ng-model="Objeto_Periodo.Codigo_Periodo">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group">
+                   <label class="text-success" ng-if="statusProceso === 0"></label>
+                   <label class="text-danger" ng-if="statusProceso === '-1'">
+                      Error. El periodo ya se encuentra registrado en el sistema.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === 100">
+                      Error. Por favor complete los campos del formulario.
+                   </label>
+                   <label class="text-success" ng-if="statusProceso === '200'">Periodo registrado correctamente</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="clearfix">
+                   <div class="pull-right">
+                      <button class="btn btn-info" ng-click="agregarPeriodo();">Crear periodo</button>
+                   </div>
+                </div>
+              </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

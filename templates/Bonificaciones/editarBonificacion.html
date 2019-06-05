@@ -1,0 +1,317 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Bonificaciones</li>
+   <li class="active">Editar bonificación</li>
+</ol>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title"><strong style="text-transform: uppercase;">Configuración de la regla para clientes</strong></div>
+        <div class="row" style="margin-top:10px;margin-bottom:10px">
+          <div class="col-sm-12">
+            <input type="checkbox" ng-model="informacionBonificacion.Todos_Clientes_Seleccionados"> Regla aplica para TODOS los clientes
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" ng-hide="informacionBonificacion.Todos_Clientes_Seleccionados">
+        <div class="row">
+          <div class="col-sm-4">
+            <label class="control-label" style="margin-bottom:10px;">Rutas</label>
+            <label class="control-label" style="margin-bottom:10px;float:right"><small style="color:#898989;">{{totalRutas}} items disponibles</small></label>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Buscar ruta" ng-model="filtroRutas">
+              </div>
+            </div>
+            <table class="table table-striped">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="ruta in listaRutas | filter: filtroRutas | startFrom: currentPageRutas * pageSize | limitTo: pageSize">
+                <td>{{ruta.Codigo_Ruta}}</td>
+                <td>{{ruta.Nombre_Ruta}}</td>
+                <td><input type="checkbox" ng-model="listaRutasSeleccionadas[ruta.ID_Ruta]"> </td>
+              </tr>
+            </table>
+            <div class="row" style="margin-top:20px;float:right;">
+              <div class="col-sm-12">
+                <button ng-disabled="currentPageRutas === 0" ng-click="currentPageRutas = currentPageRutas - 1" class="btn btn-default">Anterior</button>
+                {{currentPageRutas + 1}}/{{numeroPaginasRutas()}}
+                <button ng-disabled="currentPageRutas >= filtrarRutas().length / pageSize - 1" ng-click="currentPageRutas = currentPageRutas + 1" class="btn btn-default">Siguiente</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label class="control-label" style="margin-bottom:10px;">Listas de precios</label>
+            <label class="control-label" style="margin-bottom:10px;float:right"><small style="color:#898989;">{{totalListaPrecios}} items disponibles</small></label>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Buscar lista de precios" ng-model="filtroListasPrecios">
+              </div>
+            </div>
+            <table class="table table-striped">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="lista in listaListasPreciosClientes | filter: filtroListasPrecios | startFrom: currentPageListasPrecios * pageSize | limitTo: pageSize">
+                <td>{{lista.Codigo_Lista_Precios}}</td>
+                <td>{{lista.Nombre_Lista_Precios}}</td>
+                <td><input type="checkbox" ng-model="listaListasPreciosSeleccionadas[lista.ID_Lista_Precios]"> </td>
+              </tr>
+            </table>
+            <div class="row" style="margin-top:20px;float:right;">
+              <div class="col-sm-12">
+                <button ng-disabled="currentPageListasPrecios === 0" ng-click="currentPageListasPrecios = currentPageListasPrecios - 1" class="btn btn-default">Anterior</button>
+                {{currentPageListasPrecios + 1}}/{{numeroPaginasListasPrecios()}}
+                <button ng-disabled="currentPageListasPrecios >= filtrarListasPrecios().length / pageSize - 1" ng-click="currentPageListasPrecios = currentPageListasPrecios + 1" class="btn btn-default">Siguiente</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label class="control-label" style="margin-bottom:10px;">Categorías de clientes</label>
+            <label class="control-label" style="margin-bottom:10px;float:right"><small style="color:#898989;">{{totalCategoriasCliente}} items disponibles</small></label>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Buscar categoría de clientes" ng-model="filtroCategoriasClientes">
+              </div>
+            </div>
+            <table class="table table-striped">
+              <tr>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="familia in listaCategoriasClientes | filter: filtroCategoriasClientes | startFrom: currentPageCategoriasClientes * pageSize | limitTo: pageSize">
+                <td>{{familia.Nombre_Familia}}</td>
+                <td><input type="checkbox" ng-model="listaCategorasClientesSeleccionadas[familia.ID_Familia_Cliente]"> </td>
+              </tr>
+            </table>
+            <div class="row" style="margin-top:20px;float:right;">
+              <div class="col-sm-12">
+                <button ng-disabled="currentPageCategoriasClientes === 0" ng-click="currentPageCategoriasClientes = currentPageCategoriasClientes - 1" class="btn btn-default">Anterior</button>
+                {{currentPageCategoriasClientes + 1}}/{{numeroPaginasCategoriasClientes()}}
+                <button ng-disabled="currentPageCategoriasClientes >= filtrarCategoriasClientes().length / pageSize - 1" ng-click="currentPageCategoriasClientes = currentPageCategoriasClientes + 1" class="btn btn-default">Siguiente</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title"><strong style="text-transform: uppercase;">Configuración de la regla para productos</strong></div>
+        <div class="row" style="margin-top:10px;margin-bottom:10px">
+          <div class="col-sm-12">
+            <input type="checkbox" ng-model="informacionBonificacion.Todos_Productos_Seleccionados"> Regla aplica para TODOS los productos
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" ng-hide="informacionBonificacion.Todos_Productos_Seleccionados">
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="control-label" style="margin-bottom:10px;">Categorías de productos</label>
+            <label class="control-label" style="margin-bottom:10px;float:right"><small style="color:#898989;">{{totalCategoriasProductos}} items disponibles</small></label>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Buscar categoría de productos" ng-model="filtroCategoriasProductos">
+              </div>
+            </div>
+            <table class="table table-striped table-hover">
+              <tr>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="categoria in listaCategoriasProductos | filter: filtroCategoriasProductos | startFrom: currentPageCategoriasProductos * pageSize | limitTo: pageSize">
+                <td>{{categoria.Nombre_Categoria_Producto}}</td>
+                <td><input type="checkbox" ng-model="listaCategoriasProductosSeleccionadas[categoria.ID_Categoria_Producto]"></td>
+              </tr>
+            </table>
+            <div class="row" style="margin-top:20px;float:right;">
+              <div class="col-sm-12">
+                <button ng-disabled="currentPageCategoriasProductos === 0" ng-click="currentPageCategoriasProductos = currentPageCategoriasProductos - 1" class="btn btn-default">Anterior</button>
+                {{currentPageCategoriasProductos + 1}}/{{numeroPaginasCategoriasProductos()}}
+                <button ng-disabled="currentPageCategoriasProductos >= filtrarCategoriasProductos().length / pageSize - 1" ng-click="currentPageCategoriasProductos = currentPageCategoriasProductos + 1" class="btn btn-default">Siguiente</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="control-label" style="margin-bottom:10px;">Listas de precios</label>
+            <label class="control-label" style="margin-bottom:10px;float:right"><small style="color:#898989;">{{totalListaPrecios}} items disponibles</small></label>
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Buscar lista de precios" ng-model="filtroListaPreciosProductos">
+              </div>
+            </div>
+            <table class="table table-striped">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="lista in listaListasPreciosProductos | filter: filtroListaPreciosProductos | startFrom: currentPageListasPreciosProductos * pageSize | limitTo: pageSize">
+                <td>{{lista.Codigo_Lista_Precios}}</td>
+                <td>{{lista.Nombre_Lista_Precios}}</td>
+                <td><input type="checkbox" ng-model="listaListasPreciosProductosSeleccionadas[lista.ID_Lista_Precios]"> </td>
+              </tr>
+            </table>
+            <div class="row" style="margin-top:20px;float:right;">
+              <div class="col-sm-12">
+                <button ng-disabled="currentPageListasPreciosProductos === 0" ng-click="currentPageListasPreciosProductos = currentPageListasPreciosProductos - 1" class="btn btn-default">Anterior</button>
+                {{currentPageListasPreciosProductos + 1}}/{{numeroPaginasListasPreciosProductos()}}
+                <button ng-disabled="currentPageListasPreciosProductos >= filtrarListasPreciosProductos().length / pageSize - 1" ng-click="currentPageListasPreciosProductos = currentPageListasPreciosProductos + 1" class="btn btn-default">Siguiente</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title">Listado de productos <small> (Selección del producto a bonificar)</small></div>
+        <div class="row" style="margin-top:20px;">
+          <div class="col-sm-3">
+            <div class="input-group">
+                <input type="text" placeholder="Ingrese el nombre o código del producto" class="form-control" ng-model="objetoBonificacion.Filtro_Producto" ng-keypress="obtenerProductosEnter($event)">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="obtenerProductosFiltro();">
+                        <span class="icon-magnifier"></span>
+                    </button>
+                </span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label ng-if="statusProcesoProductos === 0"></label>
+              <label class="text-danger" ng-if="statusProcesoProductos === 100">
+                 No se encontraron productos que coincidan con el término ingresado.
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <table class="table table-striped table-hover">
+              <tr>
+                <th>ID</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Cantidad bonificada</th>
+              </tr>
+              <tr ng-repeat="pro in listaProductosBonificacion">
+                <td>{{pro.ID_Producto}}</td>
+                <td>{{pro.Codigo_Producto}}</td>
+                <td>{{pro.Nombre_Producto}}</td>
+                <td>{{pro.Descripcion}}</td>
+                <td><input type="number" class="form-control" ng-model="listaIDProductos[pro.ID_Producto]"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="panel-title">Formulario de registro <small> (Información de la bonificación)</small></div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+               <label class="control-label">Nombre</label>
+               <input type="text" class="form-control" ng-model="informacionBonificacion.Nombre_Bonificacion" disabled>
+            </div>
+            <div class="form-group">
+               <label class="control-label">Código</label>
+               <input type="text" class="form-control" ng-model="informacionBonificacion.Codigo_Bonificacion" disabled>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+               <label class="control-label">Fecha inicio</label>
+               <input type="date" class="form-control" ng-model="informacionBonificacion.Fecha_Inicio">
+            </div>
+            <div class="form-group">
+               <label class="control-label">Fecha finalización</label>
+               <input type="date" class="form-control" ng-model="informacionBonificacion.Fecha_Finalizacion">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+               <label class="control-label">Hora inicio</label>
+               <select class="form-control" ng-model="horaInicio" ng-options="hora.id as hora.valor for hora in listaHoras"></select>
+            </div>
+            <div class="form-group">
+               <label class="control-label">Hora finalización</label>
+               <select class="form-control" ng-model="horaFinalizacion" ng-options="hora.id as hora.valor for hora in listaHoras"></select>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+               <label class="control-label">Cantidad padre</label>
+               <input type="number" class="form-control" ng-model="informacionBonificacion.Cantidad_Padre">
+               <small style="text-align:justify;">* La cantidad padre representa la cantidad mínima que se debe de comprar de un producto para que este aplique en la bonificación.</small>
+            </div>
+            <div class="form-group">
+               <label class="text-success" ng-if="statusProceso === 0"></label>
+               <label class="text-danger" ng-if="statusProceso === '-1'">
+                  Error. El nombre y/o código de la bonificación ya se encuentra registrado en el sistema.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 100">
+                  Error. Por favor complete y seleccione todos los campos del formulario.
+               </label>
+               <label class="text-success" ng-if="statusProceso === '200'">Bonificación actualizada correctamente</label>
+               <label class="text-danger" ng-if="statusProceso === 300">
+                  Error. Las fechas de inicio y/o finalización son incorrectas.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 400">
+                  Error. Debe indicar una cantidad bonificada en al menos un producto del listado.
+               </label>
+               <label class="text-danger" ng-if="statusProceso === 500">
+                  Error. Existen clientes en la familia seleccionada que se encuentra registrados en otras familias de bonificaciones
+                  y algunos de los productos que las componen ya se encuentran en dichas familias. Por favor, revise los clientes y/o
+                  productos que conforman las familias seleccionadas.
+                </label>
+                <label class="text-danger" ng-if="statusProceso === 600">
+                   Error. Debe seleccionar al menos un item en las tablas para la configuración de la regla de los CLIENTES
+                </label>
+                 <label class="text-danger" ng-if="statusProceso === 700">
+                    Error. Debe indicar las cantidades de los productos que se desean bonificar
+                 </label>
+                 <label class="text-danger" ng-if="statusProceso === 800">
+                    Error. Debe seleccionar al menos un item en las tablas para la configuración de la regla de los PRODUCTOS
+                 </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer" style="background:#FFF;border:#FFF;">
+         <div class="clearfix">
+            <div class="pull-right">
+               <button type="submit" class="btn btn-primary" ng-click="guardarBonificacion();">Guardar</button>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>

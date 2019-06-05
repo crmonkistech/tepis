@@ -1,0 +1,492 @@
+<ol class="breadcrumb">
+  <li>Inicio</li>
+  <li class="active">Documentos</li>
+</ol>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-2">
+            <label>Tipo de documento</label>
+            <select class="form-control"
+              ng-options="listaCat.ID_Categoria as listaCat.Nombre_Categoria for listaCat in listaCategoriasDocumentos"
+              ng-model="objetoDocumento.ID_Categoria_Documento" ng-change="Setear_Valores_Default();">
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label style="color:transparent;">Caja de texto para buscar</label>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar documento"
+                ng-model="objetoDocumento.Filtro_Documento" ng-keypress="checkIfEnterKeyWasPressed($event);">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="obtenerDocumentosCategoria();">
+                  <span class="icon-magnifier"></span>
+                </button>
+              </span>
+            </div>
+            <!--<input type="text" class="form-control" placeholder="Buscar" ng-model="objetoDocumento.Filtro_Documento">-->
+          </div>
+          <div class="col-md-2" ng-if="Mostrar_Loading">
+            <label style="color:transparent;">Loading...</label>
+            <div class="loader-small" style="margin-top:7px;"></div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;" ng-if="Objeto_Anular_Desmarcar.Mostrar_Componente_Anular">
+          <div class="alert clearfix" style="border-color:#DDD;">
+            <div class="col-md-3">
+              <p>¿Desea <strong>anular</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 1">el Pedido</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 2">la Factura</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 3">la Devolución</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 4">el Canje</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 5">el Conteo</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 6">la Recarga</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 7">el Recibo de Dinero</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 8">el Depósito</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 9">el Gasto en Ruta</strong>
+                seleccionado?</p>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-danger"
+                ng-click="Objeto_Anular_Desmarcar.Mostrar_Componente_Anular = false;">Cancelar</button>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-success" ng-click="Anular_Desmarcar_Documentos('A');">Confirmar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;" ng-if="Objeto_Anular_Desmarcar.Mostrar_Componente_Desmarcar">
+          <div class="alert clearfix" style="border-color:#DDD;">
+            <div class="col-md-3">
+              <p>¿Desea <strong>desmarcar</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 1">el Pedido</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 2">la Factura</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 3">la Devolución</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 4">el Canje</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 5">el Conteo</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 6">la Recarga</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 7">el Recibo de Dinero</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 8">el Depósito</strong>
+                <strong ng-if="objetoDocumento.ID_Categoria_Documento === 9">el Gasto en Ruta</strong>
+                seleccionado?</p>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-danger"
+                ng-click="Objeto_Anular_Desmarcar.Mostrar_Componente_Desmarcar = false;">Cancelar</button>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-success" ng-click="Anular_Desmarcar_Documentos('D');">Confirmar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;" ng-if="Objeto_Anular_Desmarcar.Resultado_Proceso_Anular === '200'">
+          <div class="col-md-4">
+            <div class="alert alert-success" style="border-color:#DDD;">
+              <p>El proceso de <strong>Anulación</strong> fue completado correctamente.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:20px;" ng-if="Objeto_Anular_Desmarcar.Resultado_Proceso_Desmarcar === '200'">
+          <div class="col-md-4">
+            <div class="alert alert-success" style="border-color:#DDD;">
+              <p>El proceso de <strong>Desmarcar</strong> fue completado correctamente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped"
+          ng-if="objetoDocumento.ID_Categoria_Documento === 1 || objetoDocumento.ID_Categoria_Documento === 3 || objetoDocumento.ID_Categoria_Documento === 4">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Cliente</th>
+              <th>Ruta</th>
+              <th>Forma de pago</th>
+              <th>Anulado</th>
+              <th>Procesos</th>
+              <th>Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Cliente}} ({{doc.Codigo_Cliente}})</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td>{{doc.Nombre_Forma_Pago}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td>
+                <a ng-if="doc.URLActiva == true" href="{{doc.URL}}" target="_blank">Mapa</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 2">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Cliente</th>
+              <th>Ruta</th>
+              <th>Forma de pago</th>
+              <th>Anulado</th>
+              <th>Factura Electrónica</th>
+              <th>Procesos</th>
+              <th>Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Cliente}} ({{doc.Codigo_Cliente}})</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td>{{doc.Nombre_Forma_Pago}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td>{{doc.Consecutivo_Factura_Electronica}}</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td>
+                <a ng-if="doc.URLActiva == true" href="{{doc.URL}}" target="_blank">Mapa</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 5">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Ruta</th>
+              <th>Anulado</th>
+              <th>Ajuste inventario</th>
+              <th>Conteo padre</th>
+              <th>Procesos</th>
+              <th>Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td ng-if="!doc.AjusteInventario">NO</td>
+              <td ng-if="doc.AjusteInventario">SÍ</td>
+              <td>{{doc.Conteo_Padre}}</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td>
+                <a ng-if="doc.URLActiva == true" href="{{doc.URL}}" target="_blank">Mapa</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 6">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Ruta</th>
+              <th>Anulado</th>
+              <th>Procesos</th>
+              <th>Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td>
+                <a ng-if="doc.URLActiva == true" href="{{doc.URL}}" target="_blank">Mapa</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 7">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Categoría</th>
+              <th>Forma de pago</th>
+              <th>Cliente</th>
+              <th>Ruta</th>
+              <th>Anulado</th>
+              <th>Procesos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Recibido | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Categoria_Recibo_Dinero}}</td>
+              <td>{{doc.Nombre_Forma_Pago}}</td>
+              <td>{{doc.Nombre_Cliente}} ({{doc.Codigo_Cliente}})</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 8">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Referencia</th>
+              <th>Número referencia</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Ruta</th>
+              <th>Banco</th>
+              <th>Cuenta</th>
+              <th>Estado</th>
+              <th>Procesos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Numero_Referencia}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td>{{doc.Codigo_Banco}}</td>
+              <td>{{doc.Numero_Cuenta}}</td>
+              <td>{{doc.Nombre_Estado_Deposito}}</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 9">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Categoría</th>
+              <th>Comentarios</th>
+              <th>Monto</th>
+              <th>Ruta</th>
+              <th>Anulado</th>
+              <th>Código del depósito</th>
+              <th>Procesos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Nombre_Gasto}}</td>
+              <td>{{doc.Comentarios}}</td>
+              <td>{{doc.Monto | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td>{{doc.Codigo_Deposito}}</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.ID_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 10">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Monto</th>
+              <th>Factura asociada</th>
+              <th>Factura Electronica</th>
+              <th>Sincronizacion Hacienda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Nota_Credito}}</td>
+              <td>{{doc.Nombre}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Nombre_Cliente}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Codigo_Factura}}</td>
+              <td>{{doc.Consecutivo_Factura_Electronica}}</td>
+              <td>{{doc.Fecha_Sincronizacion_Hacienda | date: 'dd-MM-yyyy'}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped" ng-if="objetoDocumento.ID_Categoria_Documento === 11">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Número referencia</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Ruta</th>
+              <th>Anulado</th>
+              <th>Procesos</th>
+              <th>Mapa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat="doc in listaDocumentos | startFrom: Pagina_Actual * Cantidad_Items | limitTo: Cantidad_Items">
+              <td>{{doc.Codigo_Documento}}</td>
+              <td>{{doc.Codigo_Interfazado}}</td>
+              <td>{{doc.Fecha_Creacion | date: 'dd-MM-yyyy'}}</td>
+              <td>{{doc.Monto_Total | currency:"₡":2}}</td>
+              <td>{{doc.Nombre_Ruta}}</td>
+              <td ng-if="!doc.Anulado">NO</td>
+              <td ng-if="doc.Anulado">SÍ</td>
+              <td ng-if="!doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 2, 'Nombre_Proceso': 'Anular'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.Codigo_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td ng-if="doc.Anulado">
+                <select class="form-control"
+                  ng-options="opciones.ID_Proceso as opciones.Nombre_Proceso for opciones in  [{'ID_Proceso': 1, 'Nombre_Proceso': 'Detalles'},{'ID_Proceso': 3, 'Nombre_Proceso': 'Desmarcar'}]"
+                  ng-model="Opcion_Seleccionada" ng-change="Procesos_Documentos(doc.Codigo_Documento,Opcion_Seleccionada);">
+                </select>
+              </td>
+              <td>
+                <a ng-if="doc.URLActiva == true" href="{{doc.URL}}" target="_blank">Mapa</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p style="margin-top:20px;">{{listaDocumentos.length}} registros encontrados.</p>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual === 0" ng-click="Pagina_Actual = Pagina_Actual - 1"
+              class="btn btn-principal">Anterior</button>
+            {{Pagina_Actual + 1}}/{{CalcularPaginacion()}}
+            <button ng-disabled="Pagina_Actual >= FiltrarEntidad().length / Cantidad_Items - 1"
+              ng-click="Pagina_Actual = Pagina_Actual + 1" class="btn btn-principal">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

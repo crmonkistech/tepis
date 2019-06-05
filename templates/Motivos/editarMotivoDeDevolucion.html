@@ -1,0 +1,31 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Documentos</li>
+   <li class="active">Editar motivo de devolución</li>
+</ol>
+<div class="row">
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de edición</div>
+         </div>
+         <div class="panel-body">
+            <div class="form-group">
+               <label class="control-label">Nombre</label>
+               <input type="text" class="form-control" ng-model="Motivo.Nombre_Motivo">
+            </div>
+            <div class="form-group">
+               <label class="control-label">Descripción</label>
+               <textarea class="form-control" ng-model="Motivo.Descripcion"></textarea>
+            </div>
+         </div>
+         <div class="panel-footer" style="background: #FFF;border:#FFF;">
+            <div class="clearfix">
+               <div class="pull-right">
+                  <button type="submit" class="btn btn-info" ng-click="actualizarMotivoDevolucion();">Actualizar datos</button>
+               </div>               
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

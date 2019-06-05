@@ -1,0 +1,172 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Entregas</li>
+   <li class="active">Editar ruta de entrega</li>
+</ol>
+<div class="row">
+   <div class="col-sm-4">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Información de la ruta</div>
+         </div>
+         <div class="panel-body">
+           <div class="form-group">
+             <label>Nombre de la ruta</label>
+             <input type="text" class="form-control" placeholder="Nombre de la ruta" ng-model="Objeto_Ruta.Nombre_Ruta">
+           </div>
+           <div class="form-group">
+             <label>Código de la ruta</label>
+             <input type="text" class="form-control" placeholder="Código de la ruta" ng-model="Objeto_Ruta.Codigo_Ruta" disabled>
+           </div>
+           <div class="form-group">
+             <label>Seleccione la ruta</label>
+             <select class="form-control" ng-options="ruta.ID_Ruta as ruta.Nombre_Ruta for ruta in Lista_Rutas"
+             ng-model="Objeto_Ruta.FK_ID_Ruta"
+             ng-change="Obtener_Clientes_Ruta_Entregas();"
+             ng-disabled="Deshabilitar_Seleccion"></select>
+           </div>
+           <div class="form-group">
+             <label>Seleccione el estado</label>
+             <select class="form-control" ng-options="estado.ID_Estado_Entrega as estado.Nombre_Estado disable when estado.Nombre_Estado === 'Alistando ruta' for estado in Lista_Estados"
+             ng-model="Objeto_Ruta.FK_ID_Estado"
+             ng-disabled="Deshabilitar_Seleccion_Estado"></select>
+           </div>
+           <div class="row">
+             <div class="col-md-12">
+               <div class="clearfix">
+                 <div style="float:right;">
+                   <button class="btn btn-info" ng-click="Crear_Ruta();">Actualizar ruta</button>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="row">
+             <div class="col-md-12">
+               <div class="form-group" style="margin-top:20px;">
+                   <label class="text-success" ng-if="Estado_Proceso === 0"></label>
+                   <label class="text-danger" ng-if="Estado_Proceso === '100'">Error en el proceso. Debe completar todos los campos del formulario.</label>
+                   <label class="text-success" ng-if="Estado_Proceso === '200'">Proceso finalizado correctamente. Ruta de entrega creada con éxito.</label>
+                   <label class="text-danger" ng-if="Estado_Proceso === '300'">Error en el proceso. Debe asignar al menos un documento de entrega a la ruta.</label>
+                   <label class="text-danger" ng-if="Estado_Proceso === '400'">Error en el proceso. Debe asignar al menos un usuario a la ruta.</label>
+                   <label class="text-danger" ng-if="Estado_Proceso === '500'">Error en el proceso. El nombre de la ruta ya existe en el sistema.</label>
+                </div>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-sm-8">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Selección de clientes</div>
+         </div>
+         <div class="panel-body">
+           <div class="row">
+             <div class="col-md-12">
+               <div id="map" style="width:900px;height:500px;"></div>
+             </div>
+           </div>
+           <div class="row">
+             <div class="col-md-12">
+                 <p style="margin-top:20px;">Nota: <strong>Antes de dibujar una nueva figura sobre el mapa para crear la ruta, elimine la anterior.</strong></p>
+                 <button class="btn btn-danger pull-right" ng-click="Eliminar();">Eliminar figura</button>
+             </div>
+           </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-heading">
+         <div class="panel-title">Documentos de entrega</div>
+         <div class="row">
+           <div class="col-md-3">
+             <input type="text" class="form-control" placeholder="Buscar documento de entrega"
+             ng-model="Objeto_Filtro.Filtro_Entrega" style="margin-top:20px;">
+           </div>
+         </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table">
+              <tr>
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Forma de pago</th>
+                <th>Monto total</th>
+                <th>Fecha de creación</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="entrega in Lista_Entregas | filter: Objeto_Filtro.Filtro_Entrega | startFrom: Pagina_Actual_Entregas * Cantidad_Items_Entregas | limitTo: Cantidad_Items_Entregas">
+                <td>{{entrega.Codigo_Documento}}</td>
+                <td>{{entrega.Nombre_Cliente}}</td>
+                <td>{{entrega.Nombre_Forma_Pago}}</td>
+                <td>{{entrega.Monto_Total | currency: '₡' : 2}}</td>
+                <td>{{entrega.Fecha_Creacion | date: 'medium'}}</td>
+                <td><input type="checkbox" ng-model="Lista_Entregas_Asignadas[entrega.ID_Documento]" ng-disabled="Deshabilitar_Seleccion"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual_Entregas === 0" ng-click="Pagina_Actual_Entregas = Pagina_Actual_Entregas - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual_Entregas + 1}}/{{CalcularPaginacionEntregas()}}
+            <button ng-disabled="Pagina_Actual_Entregas >= FiltrarEntidadEntregas().length / Cantidad_Items_Entregas - 1" ng-click="Pagina_Actual_Entregas = Pagina_Actual_Entregas + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel">
+      <div class="panel-heading">
+         <div class="panel-title">Asignar usuarios a la ruta de entrega</div>
+         <div class="row">
+           <div class="col-md-3">
+             <input type="text" class="form-control" placeholder="Buscar usuario"
+             ng-model="Objeto_Filtro.Filtro_Usuario" style="margin-top:20px;">
+           </div>
+         </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table">
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Correo Electrónico</th>
+                <th>Seleccionar</th>
+              </tr>
+              <tr ng-repeat="usuario in Lista_Usuarios | filter: Objeto_Filtro.Filtro_Usuario | startFrom: Pagina_Actual_Usuarios * Cantidad_Items_Usuarios | limitTo: Cantidad_Items_Usuarios">
+                <td>{{usuario.ID_Usuario}}</td>
+                <td>{{usuario.Nombre_Usuario}}</td>
+                <td>{{usuario.Apellidos}}</td>
+                <td>{{usuario.Correo}}</td>
+                <td><input type="checkbox" ng-model="Lista_Usuarios_Asignados[usuario.ID_Usuario]" ng-disabled="Deshabilitar_Seleccion"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="clearfix">
+          <div style="float:right;">
+            <button ng-disabled="Pagina_Actual_Usuarios === 0" ng-click="Pagina_Actual_Usuarios = Pagina_Actual_Usuarios - 1" class="btn btn-default">Anterior</button>
+            {{Pagina_Actual_Usuarios + 1}}/{{CalcularPaginacionUsuarios()}}
+            <button ng-disabled="Pagina_Actual_Usuarios >= FiltrarEntidadUsuarios().length / Cantidad_Items_Usuarios - 1" ng-click="Pagina_Actual_Usuarios = Pagina_Actual_Usuarios + 1" class="btn btn-default">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

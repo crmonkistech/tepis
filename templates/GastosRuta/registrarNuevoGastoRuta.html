@@ -1,0 +1,47 @@
+<ol class="breadcrumb">
+   <li>Inicio</li>
+   <li>Categoría gastos en ruta</li>
+   <li class="active">Registrar categoría</li>
+</ol>
+<div class="row">
+   <div class="col-sm-6">
+      <div class="panel">
+         <div class="panel-heading">
+            <div class="panel-title">Formulario de registro</div>
+         </div>
+         <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group">
+                   <label class="control-label">Nombre de la categoría</label>
+                   <input type="text" class="form-control" ng-model="nuevoGastoRuta.Nombre_Gasto">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group">
+                   <label class="text-success" ng-if="statusProceso === 0"></label>
+                   <label class="text-danger" ng-if="statusProceso === '-1'">
+                      Error. La categoría del gasto en ruta ya se encuentra registrada en el sistema.
+                   </label>
+                   <label class="text-danger" ng-if="statusProceso === 100">
+                      Error. Por favor complete los campos del formulario.
+                   </label>
+                   <label class="text-success" ng-if="statusProceso === '200'">Categoría registrada correctamente</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="clearfix">
+                   <div class="pull-right">
+                      <button class="btn btn-info" ng-click="agregarGastoRuta();">Crear categoría</button>
+                   </div>
+                </div>
+              </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
